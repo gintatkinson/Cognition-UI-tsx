@@ -1,4 +1,51 @@
 import { test, expect } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
+
+function getBrainDir(): string {
+  // 1. Try environment variables
+  if (process.env.GEMINI_CONVERSATION_ID) {
+    return `/Users/perkunas/.gemini/antigravity/brain/${process.env.GEMINI_CONVERSATION_ID}`;
+  }
+  if (process.env.CONVERSATION_ID) {
+    return `/Users/perkunas/.gemini/antigravity/brain/${process.env.CONVERSATION_ID}`;
+  }
+  
+  // 2. Scan the base brain directory and pick the most recently modified subfolder (excluding .system_generated)
+  const baseDir = '/Users/perkunas/.gemini/antigravity/brain';
+  try {
+    if (fs.existsSync(baseDir)) {
+      const entries = fs.readdirSync(baseDir);
+      const dirs = entries
+        .map(name => ({ name, path: path.join(baseDir, name) }))
+        .filter(item => {
+          try {
+            return fs.statSync(item.path).isDirectory() && item.name !== '.system_generated';
+          } catch {
+            return false;
+          }
+        })
+        .map(item => {
+          try {
+            return { ...item, mtime: fs.statSync(item.path).mtime.getTime() };
+          } catch {
+            return { ...item, mtime: 0 };
+          }
+        });
+      
+      if (dirs.length > 0) {
+        dirs.sort((a, b) => b.mtime - a.mtime);
+        return dirs[0].path;
+      }
+    }
+  } catch (e) {
+    console.error('Error finding active brain directory dynamically:', e);
+  }
+  
+  // 3. Fallback to the last active ID
+  return '/Users/perkunas/.gemini/antigravity/brain/5b9ca517-c848-4e29-8de0-fd0f683b8581';
+}
+
 
 test('verify R1-Core search and details page in GUI', async ({ page }) => {
   page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
@@ -28,7 +75,7 @@ test('verify R1-Core search and details page in GUI', async ({ page }) => {
   await page.waitForTimeout(1500);
 
   // Take a screenshot of the search results
-  const screenshotPath = '/Users/perkunas/.gemini/antigravity/brain/e235f3dc-e0c8-45a3-9c11-8d52553eb662/r1_core_search_results.png';
+  const screenshotPath = path.join(getBrainDir(), 'r1_core_search_results.png');
   await page.screenshot({ path: screenshotPath });
   console.log(`Saved screenshot of search results to: ${screenshotPath}`);
 
@@ -41,7 +88,7 @@ test('verify R1-Core search and details page in GUI', async ({ page }) => {
   await page.waitForTimeout(1500);
 
   // Take a screenshot of the details page
-  const detailsScreenshotPath = '/Users/perkunas/.gemini/antigravity/brain/e235f3dc-e0c8-45a3-9c11-8d52553eb662/r1_core_details.png';
+  const detailsScreenshotPath = path.join(getBrainDir(), 'r1_core_details.png');
   await page.screenshot({ path: detailsScreenshotPath });
   console.log(`Saved screenshot of details page to: ${detailsScreenshotPath}`);
 });
@@ -84,7 +131,7 @@ test('verify R1-Core hardware containment tree in IETF Explorer view', async ({ 
   await page.waitForTimeout(1500);
 
   // Take a screenshot of the expanded tree
-  const treeScreenshotPath = '/Users/perkunas/.gemini/antigravity/brain/e235f3dc-e0c8-45a3-9c11-8d52553eb662/r1_core_tree_expansion.png';
+  const treeScreenshotPath = path.join(getBrainDir(), 'r1_core_tree_expansion.png');
   await page.screenshot({ path: treeScreenshotPath });
   console.log(`Saved screenshot of expanded tree to: ${treeScreenshotPath}`);
 

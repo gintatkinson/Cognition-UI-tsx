@@ -18,6 +18,38 @@ import { NetworkService } from '../../../services/networkService';
 import { getFacilityLocationAndChassisHelper, DetailPlacementCard } from './DetailPlacementCard';
 import { GeoLocationCard } from './GeoLocationCard';
 
+const OUI_MAPPING: Record<string, string> = {
+  'ciena corporation': '00:03:D2',
+  'ericsson': '00:01:EC',
+  'aalyria': '00:E0:4B',
+  'nec corporation': '00:00:4C',
+  'fujitsu limited': '00:00:0E',
+  'rakuten symphony': '00:1E:E3',
+  'toshiba corporation': '00:00:11',
+  'juniper networks': '00:00:FF',
+};
+
+const getVendorOUI = (manufacturerName: string | undefined): string => {
+  if (!manufacturerName) return 'N/A';
+  const cleanName = manufacturerName.trim().toLowerCase();
+  for (const [key, value] of Object.entries(OUI_MAPPING)) {
+    if (cleanName.includes(key)) {
+      return value;
+    }
+  }
+  
+  // Stable hashing fallback: hash the name to create a valid OUI prefix (3 octets, e.g. 00:XX:XX)
+  let hash = 0;
+  for (let i = 0; i < cleanName.length; i++) {
+    hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const getOctet = (val: number) => Math.abs(val % 256).toString(16).padStart(2, '0').toUpperCase();
+  const firstOctet = '00';
+  const secondOctet = getOctet(hash);
+  const thirdOctet = getOctet(hash >> 8);
+  return `${firstOctet}:${secondOctet}:${thirdOctet}`;
+};
+
 export interface SubComponentDetailProps {
   id: string;
   type: 'port' | 'hardware' | 'channel' | 'acl';
@@ -745,6 +777,25 @@ export function SubComponentDetail({
                 </div>
               )}
             </div>
+
+            {leafData.class === 'transceiver' && (
+              <div className="p-4 border border-border rounded-lg bg-muted/20 text-left space-y-3">
+                <p className="font-bold text-xs uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                  <Cpu className="w-3.5 h-3.5 text-amber-500" />
+                  Transceiver Hardware Specifications
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-background rounded-lg border border-border flex flex-col gap-1">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Vendor OUI</p>
+                    <p className="text-md font-mono font-bold text-amber-500">{getVendorOUI(leafData.manufacturer)}</p>
+                  </div>
+                  <div className="p-4 bg-background rounded-lg border border-border flex flex-col gap-1">
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">Hardware Class</p>
+                    <p className="text-md font-mono text-foreground/80">Pluggable Transceiver</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {leafData.class === 'port' && matchedIface && (
               <div className="p-4 border border-border rounded-lg bg-muted/20 text-left space-y-3">
