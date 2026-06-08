@@ -1,0 +1,65 @@
+{
+  "qkd_profiles": {
+    "q1": {
+      "model": "Quantum-BB84-Coherent-Terminator",
+      "laser_class": "Class 1 (Eye-Safe)",
+      "operating_wavelength": "1550 nm (Quantum C-Band)",
+      "pulse_rate": "1.2 GHz clock frequency",
+      "detectors": "Superconducting Nanowire Single-Photon Detector (SNSPD)",
+      "max_optical_loss_budget": "28.5 dB",
+      "protocol_mode": "Decoy-state BB84"
+    },
+    "q2": {
+      "model": "Quantum-BB84-Standard-Transceiver",
+      "laser_class": "Class 1 (Eye-Safe)",
+      "operating_wavelength": "1550 nm",
+      "pulse_rate": "622 MHz clock frequency",
+      "detectors": "InGaAs/InP Avalanche Photodiode (APD)",
+      "max_optical_loss_budget": "22.0 dB",
+      "protocol_mode": "Standard BB84"
+    },
+    "q3": {
+      "model": "Quantum-COW-FreeSpace-Terminal",
+      "laser_class": "Class 1M",
+      "operating_wavelength": "850 nm",
+      "pulse_rate": "100 MHz clock frequency",
+      "detectors": "Silicon APD",
+      "max_optical_loss_budget": "15.0 dB",
+      "protocol_mode": "Coherent One-Way (COW)"
+    }
+  },
+  "microwave_bands": {
+    "standard": {
+      "nominal_frequency_range": "18 GHz - 23 GHz",
+      "channel_bandwidth": "112 MHz standard spacing",
+      "polarization_modes": "XPIC (Co-polar / Cross-polar)",
+      "duplexer_offset": "1010 MHz separation"
+    }
+  },
+  "rack_profiles": {
+    "default": {
+      "max_rack_units": 42,
+      "chassis_form_factor": "1U / 2U slot heights",
+      "thermal_airflow_direction": "Front-to-Back air flow",
+      "power_bus_system": "Dual DC -48V Power feeds"
+    }
+  },
+  "client_signals": {
+    "iana-if-type:ethernetCsmacd": {
+      "description": "Standard 100G client Ethernet mapping",
+      "standard_reference": "IEEE 802.3ba"
+    },
+    "client-signal:OTU2": {
+      "description": "Optical Transport Unit 2 mapping",
+      "standard_reference": "ITU-T G.709"
+    },
+    "client-signal:OTU4": {
+      "description": "Optical Transport Unit 4 mapping",
+      "standard_reference": "ITU-T G.709"
+    },
+    "client-signal:STM-64": {
+      "description": "Synchronous Transport Module 64",
+      "standard_reference": "ITU-T G.707"
+    }
+  }
+}

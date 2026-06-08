@@ -39,7 +39,7 @@ export async function generateAIInsights(contextInfo: string): Promise<string> {
           markdown += `- **Nodes Evaluated**: OpenROADM nodes, Multi-Layer Edge Routers, and Satellite Ground Stations.\n`;
           markdown += `- **Network Consistency**: Nodes coordinate location references on accurate Cartesian coordinate matrices.\n\n`;
           markdown += `#### 🔬 Key Warnings & Checks\n`;
-          markdown += `- **Localization Drift**: Ensure consistent projection models when blending regional Japanese mock-topology coordinates with ground coordinates.\n`;
+          markdown += `- **Localization Drift**: Ensure consistent projection models when blending regional Japanese underlay-topology coordinates with ground coordinates.\n`;
           markdown += `- **Inactive Links**: Found links with no stream references. Check physical line configurations on interface ports.`;
         } else {
           markdown += `#### 🔍 Resource Configuration Summary (Type: ${itemType})\n`;

@@ -92,6 +92,7 @@ function buildCienaROADM(site: typeof sites[number]): NetworkElement {
     name: `Slot 1 (Line Card Slot)`,
     class: 'container',
     parentUuid: chassisId,
+    partNumber: 'ROADM-LC-SLOT',
     status: 'active'
   });
 
@@ -117,6 +118,9 @@ function buildCienaROADM(site: typeof sites[number]): NetworkElement {
       name: `Physical Port ${portName}`,
       class: 'port',
       parentUuid: moduleId,
+      manufacturer: 'Ciena Corporation',
+      partNumber: 'WLE5-TRSP-PORT',
+      serialNumber: `WL5-PORT-${site.id}-${idx}`,
       status: 'active'
     });
 
@@ -152,8 +156,26 @@ function buildCienaROADM(site: typeof sites[number]): NetworkElement {
       name: `Local Backhaul Port ${portName}`,
       class: 'port',
       parentUuid: chassisId,
+      manufacturer: 'Ciena Corporation',
+      partNumber: 'NTK-ETH-PORT',
+      serialNumber: `WL5-ETH-${site.id}-${idx}`,
       status: 'active'
     });
+
+    // ROADM Ethernet backhaul ports need SFPs for active/connected ports (eth-1)
+    if (idx === 1) {
+      const xcvrHwId = `hw-tcvr-${uuid}-eth-${idx}`;
+      hw.push({
+        uuid: xcvrHwId,
+        name: `100G BASE-LR4 QSFP28 Transceiver`,
+        class: 'transceiver',
+        parentUuid: portHwId,
+        manufacturer: 'Ciena Corporation',
+        partNumber: 'CNA-QSFP28-100G',
+        serialNumber: `WL5-ETH-TCV-${site.id}-${idx}`,
+        status: 'active'
+      });
+    }
 
     ifaces.push({
       name: portName,
@@ -229,6 +251,7 @@ function buildNECBasebandUnit(site: typeof sites[number], index: number): Networ
     name: `Slot CPU (Main Processor Slot)`,
     class: 'container',
     parentUuid: chassisId,
+    partNumber: 'BBU-CPU-SLOT',
     status: 'active'
   });
 
@@ -253,8 +276,25 @@ function buildNECBasebandUnit(site: typeof sites[number], index: number): Networ
       name: `Physical Port ${portName}`,
       class: 'port',
       parentUuid: moduleId,
+      manufacturer: manufacturer,
+      partNumber: 'QSFP28-100G-PORT',
+      serialNumber: `${manufacturer === 'Fujitsu' ? 'FUJ' : (manufacturer === 'NEC Corporation' ? 'NEC' : 'RKT')}-${site.id}-PRT-${idx}`,
       status: 'active'
     });
+
+    if (idx === 1 || idx === 2) {
+      const tcvrHwId = `hw-tcvr-${uuid}-eth-${idx}`;
+      hw.push({
+        uuid: tcvrHwId,
+        name: `100G BASE-LR4 QSFP28 Transceiver`,
+        class: 'transceiver',
+        parentUuid: portHwId,
+        manufacturer: manufacturer,
+        partNumber: `${manufacturer === 'Fujitsu' ? 'FUJ' : 'NEC'}-QSFP28-100G-LR4`,
+        serialNumber: `BBU-TCV-${site.id}-${idx}`,
+        status: 'active'
+      });
+    }
 
     ifaces.push({
       name: portName,
@@ -321,6 +361,7 @@ function buildEricssonMicrowave(site: typeof sites[number]): NetworkElement {
     name: `Slot 1 (Radio Module Slot)`,
     class: 'container',
     parentUuid: chassisId,
+    partNumber: 'MW-RAU-SLOT',
     status: 'active'
   });
 
@@ -340,11 +381,27 @@ function buildEricssonMicrowave(site: typeof sites[number]): NetworkElement {
     const portName = `up-down-link-${idx}`;
     const portHwId = `hw-port-${uuid}-up-down-link-${idx}`;
 
+    const tcvrHwId = `hw-tcvr-${uuid}-up-down-link-${idx}`;
+
     hw.push({
       uuid: portHwId,
       name: `RF Port ${portName}`,
       class: 'port',
       parentUuid: moduleId,
+      manufacturer: 'Ericsson',
+      partNumber: 'MINI-LINK-RF-PORT',
+      serialNumber: `MW-RF-${site.id}-${idx}`,
+      status: 'active'
+    });
+
+    hw.push({
+      uuid: tcvrHwId,
+      name: `E-Band Microwave RF Transceiver`,
+      class: 'transceiver',
+      parentUuid: portHwId,
+      manufacturer: 'Ericsson',
+      partNumber: 'MINI-LINK-RAU-TCVR',
+      serialNumber: `MW-TCV-${site.id}-${idx}`,
       status: 'active'
     });
 
@@ -369,8 +426,25 @@ function buildEricssonMicrowave(site: typeof sites[number]): NetworkElement {
       name: `BBU Interface Port ${portName}`,
       class: 'port',
       parentUuid: chassisId,
+      manufacturer: 'Ericsson',
+      partNumber: 'MINI-LINK-BBU-PORT',
+      serialNumber: `MW-ETH-${site.id}-${idx}`,
       status: 'active'
     });
+
+    if (idx === 1) {
+      const tcvrHwId = `hw-tcvr-${uuid}-eth-${idx}`;
+      hw.push({
+        uuid: tcvrHwId,
+        name: `100G BASE-LR4 QSFP28 Transceiver`,
+        class: 'transceiver',
+        parentUuid: portHwId,
+        manufacturer: 'Ericsson',
+        partNumber: 'ERR-QSFP28-100G',
+        serialNumber: `MW-ETH-TCV-${site.id}-${idx}`,
+        status: 'active'
+      });
+    }
 
     ifaces.push({
       name: portName,
@@ -437,6 +511,7 @@ function buildAalyriaFsoTerminal(site: typeof sites[number]): NetworkElement {
     name: `Slot 1 (Optical Laser slot)`,
     class: 'container',
     parentUuid: chassisId,
+    partNumber: 'FSO-LSR-SLOT',
     status: 'active'
   });
 
@@ -456,11 +531,27 @@ function buildAalyriaFsoTerminal(site: typeof sites[number]): NetworkElement {
     const portName = `up-down-link-${idx}`;
     const portHwId = `hw-port-${uuid}-up-down-link-${idx}`;
 
+    const tcvrHwId = `hw-tcvr-${uuid}-up-down-link-${idx}`;
+
     hw.push({
       uuid: portHwId,
       name: `Laser Port ${portName}`,
       class: 'port',
       parentUuid: moduleId,
+      manufacturer: 'Aalyria',
+      partNumber: 'TIGHTBEAM-LSR-PORT',
+      serialNumber: `FSO-LSR-${site.id}-${idx}`,
+      status: 'active'
+    });
+
+    hw.push({
+      uuid: tcvrHwId,
+      name: `Tightbeam FSO Laser Optical Transceiver`,
+      class: 'transceiver',
+      parentUuid: portHwId,
+      manufacturer: 'Aalyria',
+      partNumber: 'TIGHTBEAM-LSR-ZR',
+      serialNumber: `FSO-TCV-${site.id}-${idx}`,
       status: 'active'
     });
 
@@ -485,8 +576,25 @@ function buildAalyriaFsoTerminal(site: typeof sites[number]): NetworkElement {
       name: `BBU Connection Port ${portName}`,
       class: 'port',
       parentUuid: chassisId,
+      manufacturer: 'Aalyria',
+      partNumber: 'TIGHTBEAM-ETH-PORT',
+      serialNumber: `FSO-ETH-${site.id}-${idx}`,
       status: 'active'
     });
+
+    if (idx === 1) {
+      const tcvrHwId = `hw-tcvr-${uuid}-eth-${idx}`;
+      hw.push({
+        uuid: tcvrHwId,
+        name: `100G BASE-LR4 QSFP28 Transceiver`,
+        class: 'transceiver',
+        parentUuid: portHwId,
+        manufacturer: 'Aalyria',
+        partNumber: 'AAL-QSFP28-100G',
+        serialNumber: `FSO-ETH-TCV-${site.id}-${idx}`,
+        status: 'active'
+      });
+    }
 
     ifaces.push({
       name: portName,
@@ -553,6 +661,7 @@ function buildToshibaSatelliteNode(sat: typeof satellites[number]): NetworkEleme
     name: `Payload Bay (Payload Integration slot)`,
     class: 'container',
     parentUuid: chassisId,
+    partNumber: 'SAT-PL-BAY',
     status: 'active'
   });
 
@@ -639,6 +748,9 @@ function buildToshibaSatelliteNode(sat: typeof satellites[number]): NetworkEleme
     name: `Internal Fronthaul Port`,
     class: 'port',
     parentUuid: `hw-odu-${uuid}`,
+    manufacturer: 'NEC Corporation',
+    partNumber: 'INT-BBU-FHB',
+    serialNumber: `INT-FHB-${uuid.replace('node-SAT', '')}`,
     status: 'active'
   });
 
@@ -647,6 +759,9 @@ function buildToshibaSatelliteNode(sat: typeof satellites[number]): NetworkEleme
     name: `Internal F1-U Port`,
     class: 'port',
     parentUuid: `hw-odu-${uuid}`,
+    manufacturer: 'NEC Corporation',
+    partNumber: 'INT-BBU-F1U',
+    serialNumber: `INT-F1U-${uuid.replace('node-SAT', '')}`,
     status: 'active'
   });
 
@@ -677,11 +792,27 @@ function buildToshibaSatelliteNode(sat: typeof satellites[number]): NetworkEleme
     const portName = `isl-port-${idx}`;
     const portHwId = `hw-port-${uuid}-isl-port-${idx}`;
 
+    const tcvrHwId = `hw-tcvr-${uuid}-isl-port-${idx}`;
+
     hw.push({
       uuid: portHwId,
       name: `ISL Port ${portName}`,
       class: 'port',
-      parentUuid: moduleId,
+      parentUuid: `hw-laser-${uuid}`,
+      manufacturer: 'Toshiba Corporation',
+      partNumber: 'TOSH-ISL-PORT',
+      serialNumber: `SAT-ISL-PRT-${uuid.replace('node-SAT', '')}-${idx}`,
+      status: 'active'
+    });
+
+    hw.push({
+      uuid: tcvrHwId,
+      name: `Inter-Satellite Laser WDM Transceiver`,
+      class: 'transceiver',
+      parentUuid: portHwId,
+      manufacturer: 'Toshiba Corporation',
+      partNumber: 'TOSH-ISL-ZR',
+      serialNumber: `SAT-ISL-TCV-${uuid.replace('node-SAT', '')}-${idx}`,
       status: 'active'
     });
 
@@ -701,11 +832,27 @@ function buildToshibaSatelliteNode(sat: typeof satellites[number]): NetworkEleme
     const portName = `sat-downlink-${idx}`;
     const portHwId = `hw-port-${uuid}-sat-downlink-${idx}`;
 
+    const tcvrHwId = `hw-tcvr-${uuid}-sat-downlink-${idx}`;
+
     hw.push({
       uuid: portHwId,
       name: `Downlink RF/Laser Port ${portName}`,
       class: 'port',
-      parentUuid: moduleId,
+      parentUuid: `hw-aesa-${uuid}`,
+      manufacturer: 'Fujitsu Limited',
+      partNumber: 'FJ-DOWNLINK-PORT',
+      serialNumber: `SAT-DWN-PRT-${uuid.replace('node-SAT', '')}-${idx}`,
+      status: 'active'
+    });
+
+    hw.push({
+      uuid: tcvrHwId,
+      name: `LEO Satellite RF/Laser Ground Transceiver`,
+      class: 'transceiver',
+      parentUuid: portHwId,
+      manufacturer: 'Fujitsu Limited',
+      partNumber: 'FJ-SAT-DOWNLINK-TCVR',
+      serialNumber: `SAT-DWN-TCV-${uuid.replace('node-SAT', '')}-${idx}`,
       status: 'active'
     });
 
