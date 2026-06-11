@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
@@ -20,7 +20,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "chromium",
         "name": "chromium",
@@ -65,20 +65,20 @@
   },
   "suites": [
     {
-      "title": "detail_telemetry.spec.ts",
-      "file": "detail_telemetry.spec.ts",
+      "title": "trans_client_ports.spec.ts",
+      "file": "trans_client_ports.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "IP & MAC Telemetry Details E2E",
-          "file": "detail_telemetry.spec.ts",
+          "title": "Transport Client Service Port Mapping and Tunnels E2E",
+          "file": "trans_client_ports.spec.ts",
           "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "should display MAC address on physical port and IP address on logical TP",
+              "title": "should verify access port mapping, compatibility validation blocks, tunnels editing, and BDD Scenario 8",
               "ok": true,
               "tags": [],
               "tests": [
@@ -93,12 +93,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 14003,
+                      "duration": 14601,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-08T14:50:33.592Z",
+                      "startTime": "2026-06-11T19:06:23.811Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -106,212 +106,8 @@
                   "status": "expected"
                 }
               ],
-              "id": "1ce7d270e196bd04243c-dcf015fe6993dff7073e",
-              "file": "detail_telemetry.spec.ts",
-              "line": 4,
-              "column": 3
-            },
-            {
-              "title": "should resolve and display physical MAC address on logical router interfaces table",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 11305,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-08T14:50:33.597Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1ce7d270e196bd04243c-2d0ec9679301b0186d7d",
-              "file": "detail_telemetry.spec.ts",
-              "line": 132,
-              "column": 3
-            },
-            {
-              "title": "should display SFP transceiver status and MAC address based on link state on hardware details page",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 8801,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-08T14:50:33.615Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1ce7d270e196bd04243c-6a307b6672f5e64ca294",
-              "file": "detail_telemetry.spec.ts",
-              "line": 200,
-              "column": 3
-            },
-            {
-              "title": "should display cabinet placement and navigate to chassis detail page across all views",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 6735,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-08T14:50:33.620Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1ce7d270e196bd04243c-04b748227ac64964084a",
-              "file": "detail_telemetry.spec.ts",
-              "line": 263,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "links_expansion.spec.ts",
-      "file": "links_expansion.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Links View Expansion & Layout",
-          "file": "links_expansion.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should expand a link and display layered transport, endpoints horizontally, and services",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 4350,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-08T14:50:40.615Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "2c8c386e2e1cea6270ae-c6592906ccbb3c5bcd60",
-              "file": "links_expansion.spec.ts",
-              "line": 4,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "satellite.spec.ts",
-      "file": "satellite.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Satellite Payload Schematic",
-          "file": "satellite.spec.ts",
-          "line": 3,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should display ground gateway links and not show \"No Gateway Links\"",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 2513,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-08T14:50:42.653Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a0893372d3ae3b411ceb-0e7e0d9e78eb884102ee",
-              "file": "satellite.spec.ts",
+              "id": "78f9fb846cafd1c65e63-a6b0258e2d8fd6e84f22",
+              "file": "trans_client_ports.spec.ts",
               "line": 4,
               "column": 3
             }
@@ -322,9 +118,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-06-08T14:50:32.969Z",
-    "duration": 14913.77,
-    "expected": 6,
+    "startTime": "2026-06-11T19:06:23.430Z",
+    "duration": 15304.272,
+    "expected": 1,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

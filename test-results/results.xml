@@ -1,20 +1,6 @@
-<testsuites id="" name="" tests="6" failures="0" skipped="0" errors="0" time="14.913770000000001">
-<testsuite name="detail_telemetry.spec.ts" timestamp="2026-06-08T14:50:33.100Z" hostname="chromium" tests="4" failures="0" skipped="0" time="40.844" errors="0">
-<testcase name="IP &amp; MAC Telemetry Details E2E › should display MAC address on physical port and IP address on logical TP" classname="detail_telemetry.spec.ts" time="14.003">
-</testcase>
-<testcase name="IP &amp; MAC Telemetry Details E2E › should resolve and display physical MAC address on logical router interfaces table" classname="detail_telemetry.spec.ts" time="11.305">
-</testcase>
-<testcase name="IP &amp; MAC Telemetry Details E2E › should display SFP transceiver status and MAC address based on link state on hardware details page" classname="detail_telemetry.spec.ts" time="8.801">
-</testcase>
-<testcase name="IP &amp; MAC Telemetry Details E2E › should display cabinet placement and navigate to chassis detail page across all views" classname="detail_telemetry.spec.ts" time="6.735">
-</testcase>
-</testsuite>
-<testsuite name="links_expansion.spec.ts" timestamp="2026-06-08T14:50:33.100Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.35" errors="0">
-<testcase name="Links View Expansion &amp; Layout › should expand a link and display layered transport, endpoints horizontally, and services" classname="links_expansion.spec.ts" time="4.35">
-</testcase>
-</testsuite>
-<testsuite name="satellite.spec.ts" timestamp="2026-06-08T14:50:33.100Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.513" errors="0">
-<testcase name="Satellite Payload Schematic › should display ground gateway links and not show &quot;No Gateway Links&quot;" classname="satellite.spec.ts" time="2.513">
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="15.304272000000001">
+<testsuite name="trans_client_ports.spec.ts" timestamp="2026-06-11T19:06:23.447Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.601" errors="0">
+<testcase name="Transport Client Service Port Mapping and Tunnels E2E › should verify access port mapping, compatibility validation blocks, tunnels editing, and BDD Scenario 8" classname="trans_client_ports.spec.ts" time="14.601">
 </testcase>
 </testsuite>
 </testsuites>
