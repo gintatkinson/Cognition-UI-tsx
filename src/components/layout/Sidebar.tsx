@@ -47,8 +47,8 @@ const navItems = [
   { id: 'topology', label: 'Topology', icon: Network },
   { id: 'devices', label: 'Devices', icon: Router, subTypes: ['ROUTER', 'SWITCH', 'QKD_NODE', 'OPTICAL_SWITCH', 'SATELLITE', 'gNB_NTN'] },
   { id: 'links', label: 'Links', icon: Share2, subTypes: ['L3_IP_MPLS', 'L2_ETHERNET', 'L0_OPTICAL'] },
-  { id: 'services', label: 'Services', icon: Activity, subTypes: ['L3VPN', 'L2VPN', 'QKD'] },
-  { id: 'slices', label: 'Slices', icon: Layers, subTypes: ['eMBB', 'URLLC', 'mMTC'] },
+  { id: 'services', label: 'Services', icon: Activity, subTypes: ['L3VPN', 'L2VPN', 'QKD', 'Transport-Client'] },
+  { id: 'slices', label: 'Slices', icon: Layers, subTypes: ['eMBB', 'URLLC', 'mMTC', 'OTN'] },
 ];
 
 export function Sidebar({ 

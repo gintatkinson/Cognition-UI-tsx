@@ -20,7 +20,7 @@ import {
   Network, 
   GripHorizontal 
 } from 'lucide-react';
-import { MOCK_SLICES, MOCK_SERVICES } from '@/lib/mock-data';
+import { MOCK_SERVICES } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
 import { NetworkService } from '../../services/networkService';
 import { TopologyGraph } from '../topology/TopologyGraph';
@@ -30,7 +30,7 @@ interface SlicesViewProps {
   selectedTypes?: string[];
 }
 
-export function SlicesView({ onNavigate, selectedTypes = ['eMBB', 'URLLC', 'mMTC'] }: SlicesViewProps) {
+export function SlicesView({ onNavigate, selectedTypes = ['eMBB', 'URLLC', 'mMTC', 'OTN'] }: SlicesViewProps) {
   const [selectedSliceIds, setSelectedSliceIds] = useState<string[]>([]);
   const [highlightedSliceId, setHighlightedSliceId] = useState<string | null>(null);
   const [isGraphMaximized, setIsGraphMaximized] = useState(false);
@@ -42,7 +42,7 @@ export function SlicesView({ onNavigate, selectedTypes = ['eMBB', 'URLLC', 'mMTC
   const networkTopology = NetworkService.getInstance().getTopology();
 
   const filteredSlices = useMemo(() => 
-    MOCK_SLICES.filter(slice => 
+    NetworkService.getInstance().getSlices().filter(slice => 
       selectedTypes.length === 0 || selectedTypes.includes(slice.type) ||
       selectedTypes.some(t => slice.type.includes(t) || t.includes(slice.type))
     ),
@@ -61,7 +61,7 @@ export function SlicesView({ onNavigate, selectedTypes = ['eMBB', 'URLLC', 'mMTC
   );
 
   const graphLinks = useMemo(() => {
-    const selectedSlices = MOCK_SLICES.filter(s => selectedSliceIds.includes(s.id));
+    const selectedSlices = NetworkService.getInstance().getSlices().filter(s => selectedSliceIds.includes(s.id));
     const serviceIds = new Set(selectedSlices.flatMap(s => s.service_ids));
     const selectedServices = MOCK_SERVICES.filter(s => serviceIds.has(s.id));
     const endpointPairs = selectedServices.map(s => s.endpoints);
@@ -84,7 +84,7 @@ export function SlicesView({ onNavigate, selectedTypes = ['eMBB', 'URLLC', 'mMTC
       deviceIds.add(l.targetNodeUuid);
     });
     
-    const selectedSlices = MOCK_SLICES.filter(s => selectedSliceIds.includes(s.id));
+    const selectedSlices = NetworkService.getInstance().getSlices().filter(s => selectedSliceIds.includes(s.id));
     const serviceIds = new Set(selectedSlices.flatMap(s => s.service_ids));
     const selectedServices = MOCK_SERVICES.filter(s => serviceIds.has(s.id));
     

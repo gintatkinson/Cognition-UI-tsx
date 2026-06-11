@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, doc, setDoc, getDocs, collection, deleteDoc, connectFirestoreEmulator } from 'firebase/firestore';
 import { getJapaneseNTNTopology } from './src/lib/japanese-ntn-generator';
 import { getPassiveDevices, getPassiveCables, getRFC8345Networks } from './src/lib/mock-inventory';
+import { MOCK_SLICES } from './src/lib/mock-data';
 
 const app = initializeApp({ projectId: 'demo-cognition-topology' });
 const db = getFirestore(app);
@@ -10,7 +11,7 @@ connectFirestoreEmulator(db, '127.0.0.1', 8080);
 async function migrate() {
   console.log('Starting migration to Firestore...');
   console.log('Clearing old collections to purge orphaned data...');
-  const collectionsToClear = ['nodes', 'links', 'passive-devices', 'passive-cables', 'rfc8345-networks'];
+  const collectionsToClear = ['nodes', 'links', 'passive-devices', 'passive-cables', 'rfc8345-networks', 'slices'];
   for (const collName of collectionsToClear) {
     const querySnapshot = await getDocs(collection(db, collName));
     for (const d of querySnapshot.docs) {
@@ -50,6 +51,13 @@ async function migrate() {
   for (const net of rfcNetworks) {
     await setDoc(doc(db, 'rfc8345-networks', net.networkId), net);
     console.log(`Saved rfc8345-network: ${net.networkId}`);
+  }
+
+  // Seed Slices
+  const slices = MOCK_SLICES;
+  for (const slc of slices) {
+    await setDoc(doc(db, 'slices', slc.id), slc);
+    console.log(`Saved slice: ${slc.id}`);
   }
 
   console.log('Migration complete!');

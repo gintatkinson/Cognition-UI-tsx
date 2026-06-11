@@ -115,6 +115,85 @@ export interface IETFGeoLocation {
   validUntil?: string;
 }
 
+export interface Dot1qTagClassifier {
+  'tag-type': 'c-vlan' | 's-vlan';
+  'vlan-mode': 'single' | 'range' | 'any';
+  'vlan-id'?: number | 'any';
+  'vlan-ids'?: string;
+}
+
+export interface Dot1qPriorityRegenTable {
+  priority0: number;
+  priority1: number;
+  priority2: number;
+  priority3: number;
+  priority4: number;
+  priority5: number;
+  priority6: number;
+  priority7: number;
+}
+
+export interface Dot1qPcpDecodingEntry {
+  pcp: number;
+  priority: number;
+  'drop-eligible': boolean;
+}
+
+export interface Dot1qPcpEncodingEntry {
+  'pcp-selection-type': number;
+  pcp: number;
+  dei: boolean;
+}
+
+export interface Dot1qTrafficClassEntry {
+  priority: number;
+  'traffic-class': number;
+}
+
+export interface Dot1qTrafficClassTable {
+  'traffic-class-map': Dot1qTrafficClassEntry[];
+  'num-traffic-class'?: number;
+}
+
+export interface Dot1qTransmissionSelectionEntry {
+  'traffic-class': number;
+  'transmission-selection-algorithm': 'strict-priority' | 'credit-based-shaper' | 'enhanced-transmission-selection' | 'asynchronous-traffic-shaping' | 'vendor-specific';
+}
+
+export interface Dot1qPriorityMapping {
+  'priority-regeneration-table'?: Dot1qPriorityRegenTable;
+  'pcp-decoding-table'?: Dot1qPcpDecodingEntry[];
+  'pcp-encoding-table'?: Dot1qPcpEncodingEntry[];
+  'traffic-class-table'?: Dot1qTrafficClassTable;
+  'transmission-selection-table'?: Dot1qTransmissionSelectionEntry[];
+}
+
+export interface Dot1qPortMapEntry {
+  'port-ref': string;
+  'control-element': 'forward' | 'filter' | 'discard';
+}
+
+export interface Dot1qStaticFilteringEntry {
+  'address': string;
+  'vlan-id': number;
+  'port-map': Dot1qPortMapEntry[];
+}
+
+export interface Dot1qForwardingFiltering {
+  'ingress-filtering'?: boolean;
+  'acceptable-frame-types'?: 'admit-all' | 'admit-only-vlan-tagged' | 'admit-only-untagged-and-priority-tagged';
+  'enable-filtering'?: boolean;
+  'static-filtering-entries'?: Dot1qStaticFilteringEntry[];
+}
+
+export interface Dot1qBridgePortStatistics {
+  'delay-exceeded-discards': number;
+  'mtu-exceeded-discards': number;
+  'discard-on-ingress-filtering': number;
+  'discard-on-egress-filtering': number;
+  'discard-inbound-acceptable-frame-type': number;
+}
+
 export interface IETFInterface {
   name: string;
   description?: string;
@@ -147,6 +226,10 @@ export interface IETFInterface {
       status?: 'up' | 'down';
     }[];
   };
+  'dot1q-bridge-port-vlan'?: Dot1qTagClassifier;
+  'dot1q-priority-mapping'?: Dot1qPriorityMapping;
+  'dot1q-forwarding-filtering'?: Dot1qForwardingFiltering;
+  'dot1q-statistics'?: Dot1qBridgePortStatistics;
 }
 
 export interface IETFAclEntry {
@@ -334,6 +417,23 @@ export interface RFC8345Node {
   otnNode?: {
     presence?: boolean;
   };
+
+  // Feature 51 IETF L2 Node Attributes
+  'l2-node-attributes'?: L2NodeAttributes;
+}
+
+export interface L2TopologyAttributes {
+  name?: string;
+  flags?: string[];
+}
+
+export interface L2NodeAttributes {
+  name?: string;
+  flags?: string[];
+  'bridge-id'?: string[];
+  'management-address'?: string[];
+  'management-mac'?: string;
+  'management-vlan'?: number;
 }
 
 export interface RFC8345Network {
@@ -342,7 +442,9 @@ export interface RFC8345Network {
   description?: string;
   networkTypes?: {
     type?: 'L0-optical' | 'L1-transport' | 'L2-ethernet' | 'L3-ip-overlay' | 'virtual' | 'physical' | string;
+    'l2-topology'?: any; // Feature 51 L2 network type
   };
+  'l2-topology-attributes'?: L2TopologyAttributes; // Feature 51 L2 Network Attributes
   otnTopology?: boolean; // presence "Indicates that this is an OTN topology"
   supportingNetworks?: SupportingNetwork[]; // supporting-network list
   nodes: RFC8345Node[]; // node list
@@ -384,6 +486,26 @@ export interface RFC8345TerminationPoint {
     tsg?: string; // e.g. "tsg-1.25G" or "tsg-2.5G"
     supportedClientSignal?: { clientSignal: string }[];
   };
+
+  // Feature 53: L2 TP Attributes
+  'l2-termination-point-attributes'?: L2TerminationPointAttributes;
+}
+
+export interface L2TerminationPointAttributes {
+  'interface-name'?: string;
+  'mac-address'?: string;
+  'port-number'?: number[];
+  'unnumbered-id'?: number[];
+  'encapsulation-type'?: 'ethernet' | 'vlan' | 'qinq' | 'pbb' | 'trill' | 'vpls' | 'vxlan' | string;
+  'outer-tag'?: number;
+  'outer-tpid'?: number;
+  'inner-tag'?: number;
+  'inner-tpid'?: number;
+  lag?: boolean;
+  'member-link-tp'?: string[];
+  vxlan?: {
+    'vni-id'?: number;
+  };
 }
 
 export interface SupportingLink {
@@ -424,6 +546,29 @@ export interface RFC8345Link {
 
   teMetrics?: TEMetrics;
   protection?: LinkProtection;
+  otnNrpProfile?: OtnNrpProfile;
+  'l2-link-attributes'?: L2LinkAttributes;
+}
+
+export interface L2LinkAttributes {
+  rate?: number; // decimal64 Gbps
+  delay?: number; // uint32 microseconds
+  'auto-nego'?: boolean;
+  duplex?: 'full' | 'half';
+  flags?: string[];
+}
+
+
+export interface OtnNrpObjective {
+  'nrp-id': number;
+  'nrp-bandwidth': 'containers' | 'time-slots';
+  'container-type'?: 'ODU2' | 'ODU4' | 'ODUflex';
+  'otn-ts-num'?: number;
+}
+
+export interface OtnNrpProfile {
+  'otn-nrp-granularity': 'link' | 'link-resource';
+  nrps?: OtnNrpObjective[];
 }
 
 

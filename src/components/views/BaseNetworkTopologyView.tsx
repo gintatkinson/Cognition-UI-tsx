@@ -39,6 +39,42 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
   
   // Alert banner
   const [alert, setAlert] = useState<{ type: 'success' | 'error' | 'warning'; message: string } | null>(null);
+
+  // --- Selected Elements ---
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('');
+  const [selectedLinkId, setSelectedLinkId] = useState<string>('');
+  const [selectedTpId, setSelectedTpId] = useState<string>('');
+  
+  // L2 Node States
+  const [isEditingL2Node, setIsEditingL2Node] = useState<boolean>(false);
+  const [editMgmtMac, setEditMgmtMac] = useState<string>('');
+  const [editMgmtVlan, setEditMgmtVlan] = useState<string>('');
+  const [editBridgeId, setEditBridgeId] = useState<string>('');
+  const [l2NodeError, setL2NodeError] = useState<string | null>(null);
+
+  // L2 Link States
+  const [isEditingL2Link, setIsEditingL2Link] = useState<boolean>(false);
+  const [editL2LinkRate, setEditL2LinkRate] = useState<string>('');
+  const [editL2LinkDelay, setEditL2LinkDelay] = useState<string>('');
+  const [editL2LinkAutoNego, setEditL2LinkAutoNego] = useState<boolean>(false);
+  const [editL2LinkDuplex, setEditL2LinkDuplex] = useState<string>('');
+  const [l2LinkError, setL2LinkError] = useState<string | null>(null);
+
+  // L2 TP States
+  const [isEditingL2Tp, setIsEditingL2Tp] = useState<boolean>(false);
+  const [l2TpInterfaceName, setL2TpInterfaceName] = useState<string>('');
+  const [l2TpMacAddress, setL2TpMacAddress] = useState<string>('');
+  const [l2TpPortNumber, setL2TpPortNumber] = useState<string>('');
+  const [l2TpUnnumberedId, setL2TpUnnumberedId] = useState<string>('');
+  const [l2TpEncapsulationType, setL2TpEncapsulationType] = useState<string>('ethernet');
+  const [l2TpOuterTag, setL2TpOuterTag] = useState<string>('');
+  const [l2TpOuterTpid, setL2TpOuterTpid] = useState<string>('');
+  const [l2TpInnerTag, setL2TpInnerTag] = useState<string>('');
+  const [l2TpInnerTpid, setL2TpInnerTpid] = useState<string>('');
+  const [l2TpLagStatus, setL2TpLagStatus] = useState<boolean>(false);
+  const [l2TpMemberTps, setL2TpMemberTps] = useState<string>('');
+  const [l2TpVniId, setL2TpVniId] = useState<string>('');
+  const [l2TpValidationError, setL2TpValidationError] = useState<string | null>(null);
   const triggerAlert = (type: 'success' | 'error' | 'warning', message: string) => {
     setAlert({ type, message });
     setTimeout(() => setAlert(null), 5000);
@@ -199,7 +235,6 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
   };
 
   // --- Layering: Map Supporting Nodes for selected Node (US 26) ---
-  const [selectedNodeId, setSelectedNodeId] = useState<string>('');
   const [nodeUnderlayNetRef, setNodeUnderlayNetRef] = useState('');
   const [nodeUnderlayNodeRef, setNodeUnderlayNodeRef] = useState('');
 
@@ -220,6 +255,115 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
     if (!selectedNetwork || !selectedNodeId) return null;
     return selectedNetwork.nodes.find(n => n.nodeId === selectedNodeId) || null;
   }, [selectedNetwork, selectedNodeId]);
+
+  const targetL2Link = useMemo(() => {
+    if (!selectedNetwork || !selectedLinkId) return null;
+    return selectedNetwork.links?.find(l => l.linkId === selectedLinkId) || null;
+  }, [selectedNetwork, selectedLinkId]);
+
+  const targetTp = useMemo(() => {
+    if (!targetNode || !selectedTpId) return null;
+    return targetNode.terminationPoints?.find(tp => tp.tpId === selectedTpId) || null;
+  }, [targetNode, selectedTpId]);
+
+  const reciprocalLink = useMemo(() => {
+    if (!selectedNetwork || !targetL2Link) return null;
+    return selectedNetwork.links?.find(l => 
+      l.source.sourceNode === targetL2Link.destination.destNode &&
+      l.destination.destNode === targetL2Link.source.sourceNode
+    ) || null;
+  }, [selectedNetwork, targetL2Link]);
+
+  const hasL2LinkMismatch = useMemo(() => {
+    if (!targetL2Link || !reciprocalLink) return false;
+    const tL2 = targetL2Link['l2-link-attributes'] || {};
+    const rL2 = reciprocalLink['l2-link-attributes'] || {};
+    
+    const tRate = tL2.rate;
+    const rRate = rL2.rate;
+    const tAuto = !!tL2['auto-nego'];
+    const rAuto = !!rL2['auto-nego'];
+    const tDuplex = tL2.duplex || 'full';
+    const rDuplex = rL2.duplex || 'full';
+
+    return tRate !== rRate || tAuto !== rAuto || tDuplex !== rDuplex;
+  }, [targetL2Link, reciprocalLink]);
+
+  React.useEffect(() => {
+    if (targetNode) {
+      const l2Attr = targetNode['l2-node-attributes'] || {};
+      setEditMgmtMac(l2Attr['management-mac'] || '');
+      setEditMgmtVlan(l2Attr['management-vlan'] !== undefined ? String(l2Attr['management-vlan']) : '');
+      setEditBridgeId(l2Attr['bridge-id']?.[0] || '');
+      setL2NodeError(null);
+      setIsEditingL2Node(false);
+    } else {
+      setEditMgmtMac('');
+      setEditMgmtVlan('');
+      setEditBridgeId('');
+      setL2NodeError(null);
+      setIsEditingL2Node(false);
+    }
+    setSelectedTpId('');
+  }, [targetNode]);
+
+  React.useEffect(() => {
+    if (targetL2Link) {
+      const l2Attr = targetL2Link['l2-link-attributes'] || {};
+      setEditL2LinkRate(l2Attr.rate !== undefined ? String(l2Attr.rate) : '');
+      setEditL2LinkDelay(l2Attr.delay !== undefined ? String(l2Attr.delay) : '');
+      setEditL2LinkAutoNego(!!l2Attr['auto-nego']);
+      setEditL2LinkDuplex(l2Attr.duplex || 'full');
+      setL2LinkError(null);
+      setIsEditingL2Link(false);
+    } else {
+      setEditL2LinkRate('');
+      setEditL2LinkDelay('');
+      setEditL2LinkAutoNego(false);
+      setEditL2LinkDuplex('full');
+      setL2LinkError(null);
+      setIsEditingL2Link(false);
+    }
+  }, [targetL2Link]);
+
+  React.useEffect(() => {
+    if (targetTp) {
+      const l2Attr = targetTp['l2-termination-point-attributes'] || {};
+      setL2TpInterfaceName(l2Attr['interface-name'] || '');
+      setL2TpMacAddress(l2Attr['mac-address'] || '');
+      setL2TpPortNumber(l2Attr['port-number'] !== undefined ? String(l2Attr['port-number']) : '');
+      setL2TpUnnumberedId(l2Attr['unnumbered-id'] !== undefined ? String(l2Attr['unnumbered-id']) : '');
+      
+      const encap = l2Attr['encapsulation-type'] || 'ethernet';
+      setL2TpEncapsulationType(encap);
+      
+      setL2TpOuterTag(l2Attr['outer-tag'] !== undefined ? String(l2Attr['outer-tag']) : '');
+      setL2TpOuterTpid(l2Attr['outer-tpid'] !== undefined ? String(l2Attr['outer-tpid']) : '');
+      setL2TpInnerTag(l2Attr['inner-tag'] !== undefined ? String(l2Attr['inner-tag']) : '');
+      setL2TpInnerTpid(l2Attr['inner-tpid'] !== undefined ? String(l2Attr['inner-tpid']) : '');
+      
+      setL2TpLagStatus(!!l2Attr.lag);
+      setL2TpMemberTps(l2Attr['member-link-tp']?.join(', ') || '');
+      setL2TpVniId(l2Attr.vxlan?.['vni-id'] !== undefined ? String(l2Attr.vxlan?.['vni-id']) : '');
+      setL2TpValidationError(null);
+      setIsEditingL2Tp(false);
+    } else {
+      setL2TpInterfaceName('');
+      setL2TpMacAddress('');
+      setL2TpPortNumber('');
+      setL2TpUnnumberedId('');
+      setL2TpEncapsulationType('ethernet');
+      setL2TpOuterTag('');
+      setL2TpOuterTpid('');
+      setL2TpInnerTag('');
+      setL2TpInnerTpid('');
+      setL2TpLagStatus(false);
+      setL2TpMemberTps('');
+      setL2TpVniId('');
+      setL2TpValidationError(null);
+      setIsEditingL2Tp(false);
+    }
+  }, [targetTp]);
 
   const handleAddSupportingNode = (e: React.FormEvent) => {
     e.preventDefault();
@@ -409,7 +553,6 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
   const [linkUnderlayLinkRef, setLinkUnderlayLinkRef] = useState('');
 
   // --- OTN / fg-OTN UI States (Epic 13, Feature 43/44) ---
-  const [selectedLinkId, setSelectedLinkId] = useState<string>('');
   
   // TP OTN attributes
   const [tpOtnTsg, setTpOtnTsg] = useState<string>('tsg-1.25G');
@@ -580,10 +723,219 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
   };
 
   // --- Sandbox Simulation BDD ---
-  const [activeScenario, setActiveScenario] = useState<'overlay-L0-L3' | 'referential-integrity' | 'node-layer-mapping' | 'tp-connection' | 'link-loop-audits' | 'validate-ts-list-success' | 'validate-ts-list-fail'>('overlay-L0-L3');
+  const [activeScenario, setActiveScenario] = useState<
+    | 'overlay-L0-L3'
+    | 'referential-integrity'
+    | 'node-layer-mapping'
+    | 'tp-connection'
+    | 'link-loop-audits'
+    | 'validate-ts-list-success'
+    | 'validate-ts-list-fail'
+    | 'transceiver-client-ports'
+    | 'dot1q-vlan-classifier'
+    | 'dot1q-priority-mapping'
+    | 'dot1q-forwarding-filtering'
+    | 'dot1q-statistics'
+    | 'l2-node-attributes'
+    | 'l2-link-attributes'
+    | 'l2-tp-attributes'
+  >('overlay-L0-L3');
   const [scenarioLogs, setScenarioLogs] = useState<string[]>([]);
   const [scenarioJson, setScenarioJson] = useState<string>('');
   const [scenarioStatus, setScenarioStatus] = useState<'idle' | 'running' | 'success' | 'failed'>('idle');
+
+  const renderLogLine = (log: string) => {
+    const idRegex = /(link-[A-Za-z0-9_-]+|node-[A-Za-z0-9_-]+|tp-[A-Za-z0-9_-]+)/g;
+    const parts = log.split(idRegex);
+    if (parts.length === 1) return log;
+    return parts.map((part, index) => {
+      if (part.startsWith('link-') || part.startsWith('node-') || part.startsWith('tp-')) {
+        let type = 'device';
+        if (part.startsWith('link-')) type = 'link';
+        else if (part.startsWith('tp-')) type = 'port';
+        return (
+          <DrilldownLink
+            key={index}
+            id={part}
+            type={type}
+            onNavigate={onNavigate}
+            className="text-indigo-400 hover:underline font-bold"
+          />
+        );
+      }
+      return part;
+    });
+  };
+
+  const handleSaveL2NodeAttributes = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedNetwork || !targetNode) return;
+    
+    if (editMgmtMac) {
+      const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+      if (!macRegex.test(editMgmtMac)) {
+        setL2NodeError(`YANG Constraint Error: Management MAC address '${editMgmtMac}' must match standard IEEE 802 MAC-48 format.`);
+        return;
+      }
+    }
+    if (editMgmtVlan) {
+      const v = Number(editMgmtVlan);
+      if (isNaN(v) || v < 1 || v > 4094 || !Number.isInteger(v)) {
+        setL2NodeError(`YANG Constraint Error: Management VLAN ID '${editMgmtVlan}' must be an integer between 1 and 4094.`);
+        return;
+      }
+    }
+
+    const updatedNode: RFC8345Node = {
+      ...targetNode,
+      'l2-node-attributes': {
+        ...targetNode['l2-node-attributes'],
+        'management-mac': editMgmtMac || undefined,
+        'management-vlan': editMgmtVlan ? Number(editMgmtVlan) : undefined,
+        'bridge-id': editBridgeId ? [editBridgeId] : undefined
+      }
+    };
+
+    const updatedNetwork = {
+      ...selectedNetwork,
+      nodes: selectedNetwork.nodes.map(n => n.nodeId === targetNode.nodeId ? updatedNode : n)
+    };
+
+    try {
+      await networkService.updateRFC8345Network(updatedNetwork);
+      setNetworks(networkService.getRFC8345Networks());
+      setIsEditingL2Node(false);
+      setL2NodeError(null);
+      triggerAlert('success', `L2 attributes updated for node '${targetNode.nodeId}'.`);
+    } catch (err: any) {
+      setL2NodeError(err.message);
+    }
+  };
+
+  const handleSaveL2LinkAttributes = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedNetwork || !targetL2Link) return;
+
+    if (editL2LinkRate) {
+      const r = Number(editL2LinkRate);
+      if (isNaN(r) || r <= 0) {
+        setL2LinkError(`YANG Constraint Error: Link transmission rate must be a positive number.`);
+        return;
+      }
+    }
+    if (editL2LinkDelay) {
+      const d = Number(editL2LinkDelay);
+      if (isNaN(d) || d <= 0 || !Number.isInteger(d)) {
+        setL2LinkError(`YANG Constraint Error: Link propagation delay must be a positive integer.`);
+        return;
+      }
+    }
+
+    const updatedLink: RFC8345Link = {
+      ...targetL2Link,
+      'l2-link-attributes': {
+        ...targetL2Link['l2-link-attributes'],
+        rate: editL2LinkRate ? Number(editL2LinkRate) : undefined,
+        delay: editL2LinkDelay ? Number(editL2LinkDelay) : undefined,
+        'auto-nego': editL2LinkAutoNego,
+        duplex: editL2LinkDuplex as 'full' | 'half'
+      }
+    };
+
+    const updatedNetwork = {
+      ...selectedNetwork,
+      links: selectedNetwork.links?.map(l => l.linkId === targetL2Link.linkId ? updatedLink : l)
+    };
+
+    try {
+      await networkService.updateRFC8345Network(updatedNetwork);
+      setNetworks(networkService.getRFC8345Networks());
+      setIsEditingL2Link(false);
+      setL2LinkError(null);
+      triggerAlert('success', `L2 attributes updated for link '${targetL2Link.linkId}'.`);
+    } catch (err: any) {
+      setL2LinkError(err.message);
+    }
+  };
+
+  const handleSaveL2TpAttributes = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedNetwork || !targetNode || !targetTp) return;
+
+    if (l2TpMacAddress) {
+      const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+      if (!macRegex.test(l2TpMacAddress)) {
+        setL2TpValidationError(`YANG Constraint Error: Hardware MAC address '${l2TpMacAddress}' on port '${targetTp.tpId}' must match standard IEEE 802 MAC-48 format.`);
+        return;
+      }
+    }
+    if (l2TpEncapsulationType === 'vlan' || l2TpEncapsulationType === 'qinq') {
+      if (l2TpOuterTag) {
+        const tag = Number(l2TpOuterTag);
+        if (isNaN(tag) || tag < 1 || tag > 4094 || !Number.isInteger(tag)) {
+          setL2TpValidationError(`YANG Constraint Error: Outer VLAN Tag must be an integer between 1 and 4094.`);
+          return;
+        }
+      }
+    }
+    if (l2TpEncapsulationType === 'qinq') {
+      if (l2TpInnerTag) {
+        const tag = Number(l2TpInnerTag);
+        if (isNaN(tag) || tag < 1 || tag > 4094 || !Number.isInteger(tag)) {
+          setL2TpValidationError(`YANG Constraint Error: Inner VLAN Tag must be an integer between 1 and 4094.`);
+          return;
+        }
+      }
+    }
+    if (l2TpEncapsulationType === 'vxlan') {
+      if (l2TpVniId) {
+        const vni = Number(l2TpVniId);
+        if (isNaN(vni) || vni < 1 || vni > 16777215 || !Number.isInteger(vni)) {
+          setL2TpValidationError(`YANG Constraint Error: VXLAN VNI ID must be an integer between 1 and 16777215.`);
+          return;
+        }
+      }
+    }
+
+    const updatedTp: RFC8345TerminationPoint = {
+      ...targetTp,
+      'l2-termination-point-attributes': {
+        ...targetTp['l2-termination-point-attributes'],
+        'interface-name': l2TpInterfaceName || undefined,
+        'mac-address': l2TpMacAddress || undefined,
+        'port-number': l2TpPortNumber ? [Number(l2TpPortNumber)] : undefined,
+        'unnumbered-id': l2TpUnnumberedId ? [Number(l2TpUnnumberedId)] : undefined,
+        'encapsulation-type': l2TpEncapsulationType || undefined,
+        'outer-tag': (l2TpEncapsulationType === 'vlan' || l2TpEncapsulationType === 'qinq') && l2TpOuterTag ? Number(l2TpOuterTag) : undefined,
+        'outer-tpid': (l2TpEncapsulationType === 'vlan' || l2TpEncapsulationType === 'qinq') && l2TpOuterTpid ? Number(l2TpOuterTpid) : undefined,
+        'inner-tag': l2TpEncapsulationType === 'qinq' && l2TpInnerTag ? Number(l2TpInnerTag) : undefined,
+        'inner-tpid': l2TpEncapsulationType === 'qinq' && l2TpInnerTpid ? Number(l2TpInnerTpid) : undefined,
+        lag: l2TpLagStatus,
+        'member-link-tp': l2TpLagStatus && l2TpMemberTps ? l2TpMemberTps.split(',').map(s => s.trim()).filter(Boolean) : undefined,
+        vxlan: l2TpEncapsulationType === 'vxlan' && l2TpVniId ? { 'vni-id': Number(l2TpVniId) } : undefined
+      }
+    };
+
+    const updatedNode: RFC8345Node = {
+      ...targetNode,
+      terminationPoints: targetNode.terminationPoints?.map(tp => tp.tpId === targetTp.tpId ? updatedTp : tp)
+    };
+
+    const updatedNetwork = {
+      ...selectedNetwork,
+      nodes: selectedNetwork.nodes.map(n => n.nodeId === targetNode.nodeId ? updatedNode : n)
+    };
+
+    try {
+      await networkService.updateRFC8345Network(updatedNetwork);
+      setNetworks(networkService.getRFC8345Networks());
+      setIsEditingL2Tp(false);
+      setL2TpValidationError(null);
+      triggerAlert('success', `L2 attributes updated for TP '${targetTp.tpId}' under node '${targetNode.nodeId}'.`);
+    } catch (err: any) {
+      setL2TpValidationError(err.message);
+    }
+  };
 
   const executeScenarioSimulation = () => {
     setScenarioStatus('running');
@@ -752,6 +1104,201 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
               "failed-at-slot": 8,
               "violation": "overlapping_or_duplicate_tributary_range",
               "action": "TRANSACTION_ROLLBACK"
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'transceiver-client-ports':
+          setScenarioLogs([
+            'GIVEN: ietf-trans-client-service model configuration is initiated',
+            'WHEN: mapping customer interface access port definitions with client-signal l1-types:ETH-10Gb-LAN',
+            'THEN: system runs compatibility checks on optical transceivers and provisions service tunnels',
+            'STATUS: PASS (YANG ietf-trans-client-service port-mapping compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "ietf-trans-client-service:trans-client-service": {
+              "src-access-ports": {
+                "node-id": "node-L3-TK-router",
+                "tp-id": "tp-L3-TK-ge1",
+                "client-signal": "l1-types:ETH-10Gb-LAN"
+              },
+              "dst-access-ports": {
+                "node-id": "node-L3-OS-router",
+                "tp-id": "tp-L3-OS-ge1",
+                "client-signal": "l1-types:ETH-10Gb-LAN"
+              },
+              "svc-tunnels": [
+                {
+                  "tunnel-id": "tunnel-OTN-TK-to-OS-Backup"
+                }
+              ],
+               "pm-state": {
+                "laser-bias-current": "35.2 mA",
+                "optical-power-rx": "-4.8 dBm"
+              },
+              "error-info": null
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'dot1q-vlan-classifier':
+          setScenarioLogs([
+            'GIVEN: IEEE 802.1Q bridge port classifier on port tp-d1-eth0 under node-d1',
+            'WHEN: customer VLAN range is configured to 10,20-30,50-100',
+            'THEN: validation engine checks tag-type c-vlan and confirms disjoint ascending range sequences',
+            'STATUS: PASS (IEEE 802.1Q tag classifier validation engine compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "dot1q-bridge-port-vlan": {
+              "node-id": "node-d1",
+              "tp-id": "tp-d1-eth0",
+              "tag-type": "c-vlan",
+              "vlan-mode": "range",
+              "vlan-ids": "10,20-30,50-100"
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'dot1q-priority-mapping':
+          setScenarioLogs([
+            'GIVEN: IEEE 802.1Q priority mapping configuration on port tp-d1-eth0 under node-d1',
+            'WHEN: mapping Priority 7 to Traffic Class 5 and class 7 algorithm to credit-based-shaper',
+            'THEN: traffic-class-table and transmission-selection-table are successfully generated and validated',
+            'STATUS: PASS (IEEE 802.1Q priority and traffic class mapping engine compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "dot1q-priority-mapping": {
+              "node-id": "node-d1",
+              "tp-id": "tp-d1-eth0",
+              "priority-regeneration-table": {
+                "priority0": 0,
+                "priority1": 1,
+                "priority2": 2,
+                "priority3": 3,
+                "priority4": 4,
+                "priority5": 5,
+                "priority6": 6,
+                "priority7": 7
+              },
+              "traffic-class-table": {
+                "num-traffic-class": 8,
+                "traffic-class-map": [
+                  { "priority": 7, "traffic-class": 5 }
+                ]
+              },
+              "transmission-selection-table": [
+                { "traffic-class": 7, "transmission-selection-algorithm": "credit-based-shaper" }
+              ]
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'dot1q-forwarding-filtering':
+          setScenarioLogs([
+            'GIVEN: IEEE 802.1Q forwarding filtering configuration on port tp-d1-eth0 under node-d1',
+            'WHEN: setting ingress-filtering to true, acceptable-frame-types to admit-only-vlan-tagged, and static FDB entry for vlan 20',
+            'THEN: FDB table contains static-filtering-entries with forward/discard/filter port-map rules',
+            'STATUS: PASS (IEEE 802.1Q forwarding filtering engine compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "dot1q-forwarding-filtering": {
+              "node-id": "node-d1",
+              "tp-id": "tp-d1-eth0",
+              "ingress-filtering": true,
+              "acceptable-frame-types": "admit-only-vlan-tagged",
+              "static-filtering-entries": [
+                {
+                  "address": "00:AA:BB:CC:DD:EE",
+                  "vlan-id": 20,
+                  "port-map": [
+                    { "port-ref": "eth0", "control-element": "forward" },
+                    { "port-ref": "eth1", "control-element": "discard" }
+                  ]
+                }
+              ]
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+         case 'dot1q-statistics':
+          setScenarioLogs([
+            'GIVEN: IEEE 802.1Q bridge port statistics counters on port tp-d1-eth0 under node-d1',
+            'WHEN: polling discard counters and executing stats reset request',
+            'THEN: delay-exceeded-discards and mtu-exceeded-discards counters are successfully cleared',
+            'STATUS: PASS (IEEE 802.1Q statistics and reset engine compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "dot1q-statistics": {
+              "node-id": "node-d1",
+              "tp-id": "tp-d1-eth0",
+              "delay-exceeded-discards": 0,
+              "mtu-exceeded-discards": 0,
+              "discard-on-ingress-filtering": 0,
+              "discard-on-egress-filtering": 0,
+              "discard-inbound-acceptable-frame-type": 0
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'l2-node-attributes':
+          setScenarioLogs([
+            'GIVEN: L2 switch node-L2-TK-switch with port tp-L2-TK-eth0',
+            'WHEN: NOC administrator updates management-mac to 00:AA:BB:CC:DD:EE and management-vlan to 200',
+            'THEN: the system validates IETF Layer 2 Topology and Node Attributes',
+            'STATUS: PASS (IETF Layer 2 Topology and Node Attributes validation compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "ietf-l2-topology:l2-node-attributes": {
+              "node-id": "node-L2-TK-switch",
+              "tp-id": "tp-L2-TK-eth0",
+              "bridge-id": ["bridge-01"],
+              "management-mac": "00:AA:BB:CC:DD:EE",
+              "management-vlan": 200
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'l2-link-attributes':
+          setScenarioLogs([
+            'GIVEN: Layer 2 ethernet links link-L2-TK-SW-to-NG-SW and link-L2-NG-SW-to-TK-SW',
+            'WHEN: checking link-id constraints rate (10 Gbps), delay (50 µs), auto-nego (false), and duplex (full)',
+            'THEN: the reciprocal link attributes are aligned, and the configuration is committed',
+            'STATUS: PASS (IETF Layer 2 Link Attributes validation compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "ietf-l2-topology:l2-link-attributes": {
+              "links": ["link-L2-TK-SW-to-NG-SW", "link-L2-NG-SW-to-TK-SW"],
+              "rate": 10,
+              "delay": 50,
+              "auto-nego": false,
+              "duplex": "full"
+            }
+          }, null, 2));
+          setScenarioStatus('success');
+          break;
+
+        case 'l2-tp-attributes':
+          setScenarioLogs([
+            'GIVEN: L2 switch node-L2-TK-switch with port tp-L2-TK-eth0',
+            'WHEN: NOC administrator sets encapsulation-type to vlan with outer-tag 200',
+            'THEN: the system validates encapsulation parameters and outer-tag ranges',
+            'STATUS: PASS (IETF Layer 2 TP Encapsulation and Virtualization compliant)'
+          ]);
+          setScenarioJson(JSON.stringify({
+            "ietf-l2-topology:l2-termination-point-attributes": {
+              "node-id": "node-L2-TK-switch",
+              "tp-id": "tp-L2-TK-eth0",
+              "interface-name": "eth0",
+              "mac-address": "00:11:22:33:44:55",
+              "encapsulation-type": "vlan",
+              "outer-tag": 200
             }
           }, null, 2));
           setScenarioStatus('success');
@@ -1272,15 +1819,29 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
                         {targetNode.terminationPoints && targetNode.terminationPoints.length > 0 ? (
                           <div className="space-y-2 max-h-[220px] overflow-y-auto pr-1 text-left">
                             {targetNode.terminationPoints.map((tp, idx) => (
-                              <div key={idx} className="bg-zinc-900/65 p-2.5 rounded border border-zinc-850 flex flex-col gap-1.5">
+                              <div 
+                                key={idx} 
+                                id={`tp-item-${tp.tpId}`}
+                                onClick={() => {
+                                  setSelectedTpId(tp.tpId);
+                                }}
+                                className={`p-2.5 rounded border flex flex-col gap-1.5 cursor-pointer transition-all ${
+                                  selectedTpId === tp.tpId
+                                    ? 'bg-emerald-600/10 border-emerald-500 text-white shadow-md'
+                                    : 'bg-zinc-900/65 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                                }`}
+                              >
                                 <div className="flex justify-between items-center">
                                   <div className="text-white font-bold flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
-                                    {tp.tpId}
+                                    <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${selectedTpId === tp.tpId ? 'bg-emerald-400' : 'bg-emerald-500'}`}></span>
+                                    <DrilldownLink id={tp.tpId} type="port" onNavigate={onNavigate} />
                                   </div>
                                   <button
                                     type="button"
-                                    onClick={() => handleDeleteTp(tp.tpId)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDeleteTp(tp.tpId);
+                                    }}
                                     className="text-zinc-500 hover:text-red-400 p-1 rounded hover:bg-red-500/10 transition-colors shrink-0"
                                     title="Remove TP"
                                   >
@@ -1387,6 +1948,397 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
                         </div>
                       </form>
                     </div>
+
+                    {/* IETF Layer 2 Node Attributes Panel */}
+                    {(selectedNetwork.networkTypes?.type === 'L2-ethernet' || selectedNetwork.networkTypes?.['l2-topology'] || targetNode['l2-node-attributes']) && (
+                      <div id="l2-node-attributes-panel" className="border-t border-zinc-900 pt-5 mt-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white font-mono flex items-center gap-1.5">
+                            <Layers className="w-4 h-4 text-emerald-400" />
+                            IETF Layer 2 Node Attributes
+                          </h4>
+                          {!isEditingL2Node && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const l2Attr = targetNode['l2-node-attributes'] || {};
+                                setEditMgmtMac(l2Attr['management-mac'] || '');
+                                setEditMgmtVlan(l2Attr['management-vlan'] !== undefined ? String(l2Attr['management-vlan']) : '');
+                                setEditBridgeId(l2Attr['bridge-id']?.[0] || '');
+                                setIsEditingL2Node(true);
+                              }}
+                              className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold font-mono"
+                            >
+                              Edit Attributes
+                            </button>
+                          )}
+                        </div>
+
+                        {l2NodeError && (
+                          <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg animate-slide-in font-mono">
+                            {l2NodeError}
+                          </div>
+                        )}
+
+                        {!isEditingL2Node ? (
+                          <div className="grid grid-cols-2 gap-4 text-xs font-mono bg-zinc-900/30 p-4 rounded-xl border border-zinc-900">
+                            <div>
+                              <span className="text-zinc-500 block">Management MAC:</span>
+                              <span id="display-l2-mgmt-mac" className="text-white font-semibold">
+                                {targetNode['l2-node-attributes']?.['management-mac'] || 'N/A'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-zinc-500 block">Management VLAN:</span>
+                              <span id="display-l2-mgmt-vlan" className="text-white font-semibold">
+                                {targetNode['l2-node-attributes']?.['management-vlan'] !== undefined
+                                  ? targetNode['l2-node-attributes']?.['management-vlan']
+                                  : 'N/A'}
+                              </span>
+                            </div>
+                            {targetNode['l2-node-attributes']?.['bridge-id'] && (
+                              <div className="col-span-2">
+                                <span className="text-zinc-500 block">Bridge ID:</span>
+                                <span className="text-white font-semibold truncate block">
+                                  {targetNode['l2-node-attributes']?.['bridge-id']?.join(', ')}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <form onSubmit={handleSaveL2NodeAttributes} className="space-y-4 bg-zinc-900/40 p-4 rounded-xl border border-zinc-900">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Management MAC</label>
+                                <input
+                                  id="input-l2-mgmt-mac"
+                                  type="text"
+                                  placeholder="e.g. 00:11:22:33:44:55"
+                                  value={editMgmtMac}
+                                  onChange={(e) => setEditMgmtMac(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Management VLAN</label>
+                                <input
+                                  id="input-l2-mgmt-vlan"
+                                  type="number"
+                                  placeholder="e.g. 100"
+                                  value={editMgmtVlan}
+                                  onChange={(e) => setEditMgmtVlan(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-[10px] text-zinc-500 uppercase block mb-1">Bridge ID</label>
+                              <input
+                                type="text"
+                                placeholder="e.g. bridge-01"
+                                value={editBridgeId}
+                                onChange={(e) => setEditBridgeId(e.target.value)}
+                                className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                              />
+                            </div>
+                            <div className="flex gap-2 justify-end">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsEditingL2Node(false);
+                                  setL2NodeError(null);
+                                }}
+                                className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-1.5 px-3 rounded text-xs"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                id="btn-l2-save"
+                                type="submit"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded text-xs"
+                              >
+                                Save Attributes
+                              </button>
+                            </div>
+                          </form>
+                        )}
+                      </div>
+                    )}
+
+                    {/* IETF Layer 2 Port Attributes Panel */}
+                    {targetTp && (selectedNetwork.networkTypes?.type === 'L2-ethernet' || selectedNetwork.networkTypes?.['l2-topology'] || targetTp['l2-termination-point-attributes']) && (
+                      <div id="l2-tp-attributes-panel" className="border-t border-zinc-900 pt-5 mt-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-sm font-bold text-white font-mono flex items-center gap-1.5 border-b border-zinc-900 pb-2">
+                            <Layers className="w-4 h-4 text-emerald-400" />
+                            IETF Layer 2 Port Attributes:
+                          </h4>
+                          {!isEditingL2Tp && (
+                            <button
+                              id="btn-l2-tp-edit"
+                              type="button"
+                              onClick={() => {
+                                const l2Attr = targetTp['l2-termination-point-attributes'] || {};
+                                setL2TpInterfaceName(l2Attr['interface-name'] || '');
+                                setL2TpMacAddress(l2Attr['mac-address'] || '');
+                                setL2TpPortNumber(l2Attr['port-number'] !== undefined ? String(l2Attr['port-number']) : '');
+                                setL2TpUnnumberedId(l2Attr['unnumbered-id'] !== undefined ? String(l2Attr['unnumbered-id']) : '');
+                                setL2TpEncapsulationType(l2Attr['encapsulation-type'] || 'ethernet');
+                                setL2TpOuterTag(l2Attr['outer-tag'] !== undefined ? String(l2Attr['outer-tag']) : '');
+                                setL2TpOuterTpid(l2Attr['outer-tpid'] !== undefined ? String(l2Attr['outer-tpid']) : '');
+                                setL2TpInnerTag(l2Attr['inner-tag'] !== undefined ? String(l2Attr['inner-tag']) : '');
+                                setL2TpInnerTpid(l2Attr['inner-tpid'] !== undefined ? String(l2Attr['inner-tpid']) : '');
+                                setL2TpLagStatus(!!l2Attr.lag);
+                                setL2TpMemberTps(l2Attr['member-link-tp']?.join(', ') || '');
+                                setL2TpVniId(l2Attr.vxlan?.['vni-id'] !== undefined ? String(l2Attr.vxlan?.['vni-id']) : '');
+                                setIsEditingL2Tp(true);
+                              }}
+                              className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold font-mono"
+                            >
+                              Edit Attributes
+                            </button>
+                          )}
+                        </div>
+
+                        {l2TpValidationError && (
+                          <div id="l2-tp-error" className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg animate-slide-in font-mono">
+                            {l2TpValidationError}
+                          </div>
+                        )}
+
+                        {!isEditingL2Tp ? (
+                          <div className="grid grid-cols-2 gap-4 text-xs font-mono bg-zinc-900/30 p-4 rounded-xl border border-zinc-900">
+                            <div>
+                              <span className="text-zinc-500 block">Interface Name:</span>
+                              <span id="display-l2-tp-interface-name" className="text-white font-semibold">
+                                {targetTp['l2-termination-point-attributes']?.['interface-name'] || 'N/A'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-zinc-500 block">Hardware MAC:</span>
+                              <span id="display-l2-tp-mac-address" className="text-white font-semibold">
+                                {targetTp['l2-termination-point-attributes']?.['mac-address'] || 'N/A'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-zinc-500 block">Encapsulation Type:</span>
+                              <span id="display-l2-tp-encapsulation" className="text-white font-semibold">
+                                {targetTp['l2-termination-point-attributes']?.['encapsulation-type'] || 'N/A'}
+                              </span>
+                            </div>
+                            <div>
+                              <span className="text-zinc-500 block">Outer VLAN Tag:</span>
+                              <span id="display-l2-tp-outer-tag" className="text-white font-semibold">
+                                {targetTp['l2-termination-point-attributes']?.['outer-tag'] !== undefined
+                                  ? targetTp['l2-termination-point-attributes']?.['outer-tag']
+                                  : 'N/A'}
+                              </span>
+                            </div>
+                            {targetTp['l2-termination-point-attributes']?.['encapsulation-type'] === 'qinq' && (
+                              <div>
+                                <span className="text-zinc-500 block">Inner VLAN Tag:</span>
+                                <span className="text-white font-semibold font-mono">
+                                  {targetTp['l2-termination-point-attributes']?.['inner-tag'] !== undefined
+                                    ? targetTp['l2-termination-point-attributes']?.['inner-tag']
+                                    : 'N/A'}
+                                </span>
+                              </div>
+                            )}
+                            {targetTp['l2-termination-point-attributes']?.['encapsulation-type'] === 'vxlan' && (
+                              <div>
+                                <span className="text-zinc-500 block">VXLAN VNI:</span>
+                                <span className="text-white font-semibold font-mono">
+                                  {targetTp['l2-termination-point-attributes']?.vxlan?.['vni-id'] !== undefined
+                                    ? targetTp['l2-termination-point-attributes']?.vxlan?.['vni-id']
+                                    : 'N/A'}
+                                </span>
+                              </div>
+                            )}
+                            {targetTp['l2-termination-point-attributes']?.lag && (
+                              <div className="col-span-2">
+                                <span className="text-zinc-500 block">LAG Member TPs:</span>
+                                <span className="text-white font-semibold truncate block">
+                                  {targetTp['l2-termination-point-attributes']?.['member-link-tp']?.join(', ') || 'None'}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <form onSubmit={handleSaveL2TpAttributes} className="space-y-4 bg-zinc-900/40 p-4 rounded-xl border border-zinc-900">
+                            <div className="grid grid-cols-2 gap-4">
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Interface Name</label>
+                                <input
+                                  id="input-l2-tp-interface-name"
+                                  type="text"
+                                  placeholder="e.g. eth0"
+                                  value={l2TpInterfaceName}
+                                  onChange={(e) => setL2TpInterfaceName(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Hardware MAC</label>
+                                <input
+                                  id="input-l2-tp-mac-address"
+                                  type="text"
+                                  placeholder="e.g. 00:11:22:33:44:55"
+                                  value={l2TpMacAddress}
+                                  onChange={(e) => setL2TpMacAddress(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Port Number</label>
+                                <input
+                                  id="input-l2-tp-port-number"
+                                  type="number"
+                                  placeholder="e.g. 1"
+                                  value={l2TpPortNumber}
+                                  onChange={(e) => setL2TpPortNumber(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Unnumbered ID</label>
+                                <input
+                                  id="input-l2-tp-unnumbered-id"
+                                  type="number"
+                                  placeholder="e.g. 101"
+                                  value={l2TpUnnumberedId}
+                                  onChange={(e) => setL2TpUnnumberedId(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Encapsulation Type</label>
+                                <select
+                                  id="input-l2-tp-encapsulation-type"
+                                  value={l2TpEncapsulationType}
+                                  onChange={(e) => setL2TpEncapsulationType(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-sans outline-none"
+                                >
+                                  <option value="ethernet">ethernet</option>
+                                  <option value="vlan">vlan</option>
+                                  <option value="qinq">qinq</option>
+                                  <option value="vxlan">vxlan</option>
+                                </select>
+                              </div>
+                              
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Outer VLAN Tag</label>
+                                <input
+                                  id="input-l2-tp-outer-tag"
+                                  type="number"
+                                  disabled={l2TpEncapsulationType !== 'vlan' && l2TpEncapsulationType !== 'qinq'}
+                                  placeholder="e.g. 100"
+                                  value={l2TpOuterTag}
+                                  onChange={(e) => setL2TpOuterTag(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none disabled:opacity-40"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Outer TPID</label>
+                                <input
+                                  id="input-l2-tp-outer-tpid"
+                                  type="number"
+                                  disabled={l2TpEncapsulationType !== 'vlan' && l2TpEncapsulationType !== 'qinq'}
+                                  placeholder="e.g. 33024"
+                                  value={l2TpOuterTpid}
+                                  onChange={(e) => setL2TpOuterTpid(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none disabled:opacity-40"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Inner VLAN Tag</label>
+                                <input
+                                  id="input-l2-tp-inner-tag"
+                                  type="number"
+                                  disabled={l2TpEncapsulationType !== 'qinq'}
+                                  placeholder="e.g. 200"
+                                  value={l2TpInnerTag}
+                                  onChange={(e) => setL2TpInnerTag(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none disabled:opacity-40"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">Inner TPID</label>
+                                <input
+                                  id="input-l2-tp-inner-tpid"
+                                  type="number"
+                                  disabled={l2TpEncapsulationType !== 'qinq'}
+                                  placeholder="e.g. 33024"
+                                  value={l2TpInnerTpid}
+                                  onChange={(e) => setL2TpInnerTpid(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none disabled:opacity-40"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">VXLAN VNI ID</label>
+                                <input
+                                  id="input-l2-tp-vni-id"
+                                  type="number"
+                                  disabled={l2TpEncapsulationType !== 'vxlan'}
+                                  placeholder="e.g. 10000"
+                                  value={l2TpVniId}
+                                  onChange={(e) => setL2TpVniId(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none disabled:opacity-40"
+                                />
+                              </div>
+
+                              <div className="flex items-center gap-2 pt-4 col-span-2">
+                                <input
+                                  id="input-l2-tp-lag"
+                                  type="checkbox"
+                                  checked={l2TpLagStatus}
+                                  onChange={(e) => setL2TpLagStatus(e.target.checked)}
+                                  className="rounded border border-border bg-background outline-none shrink-0"
+                                />
+                                <label htmlFor="input-l2-tp-lag" className="text-xs text-zinc-300 font-sans cursor-pointer select-none">
+                                  LAG Member status
+                                </label>
+                              </div>
+
+                              <div className="col-span-2">
+                                <label className="text-[10px] text-zinc-500 uppercase block mb-1">LAG Member ports (comma-separated)</label>
+                                <input
+                                  id="input-l2-tp-member-tps"
+                                  type="text"
+                                  disabled={!l2TpLagStatus}
+                                  placeholder="e.g. eth0, eth1"
+                                  value={l2TpMemberTps}
+                                  onChange={(e) => setL2TpMemberTps(e.target.value)}
+                                  className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none disabled:opacity-40"
+                                />
+                              </div>
+                            </div>
+                            <div className="flex gap-2 justify-end pt-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setIsEditingL2Tp(false);
+                                  setL2TpValidationError(null);
+                                }}
+                                className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-1.5 px-3 rounded text-xs"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                id="btn-l2-tp-save"
+                                type="submit"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded text-xs"
+                              >
+                                Save Attributes
+                              </button>
+                            </div>
+                          </form>
+                        )}
+                      </div>
+                    )}
 
                   </div>
                 ) : (
@@ -1597,6 +2549,153 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
                     </form>
                   </div>
                 </div>
+
+                {/* IETF Layer 2 Link Attributes Panel */}
+                {targetL2Link && (selectedNetwork.networkTypes?.type === 'L2-ethernet' || selectedNetwork.networkTypes?.['l2-topology'] || targetL2Link['l2-link-attributes']) && (
+                  <div id="l2-link-attributes-panel" className="bg-zinc-950/40 border border-zinc-900 rounded-xl p-5 space-y-4 text-left font-mono mt-6">
+                    <div className="flex items-center justify-between border-b border-zinc-900 pb-3">
+                      <div>
+                        <h4 className="text-sm font-bold text-white font-mono flex items-center gap-1.5">
+                          <Layers className="w-4 h-4 text-emerald-400" />
+                          IETF Layer 2 Link Attributes: {targetL2Link.linkId}
+                        </h4>
+                        <p className="text-[10px] text-zinc-500 font-sans mt-0.5">YANG link attributes config / l2-link-attributes</p>
+                      </div>
+                      {!isEditingL2Link && (
+                        <button
+                          id="btn-l2-link-edit"
+                          type="button"
+                          onClick={() => {
+                            const l2Attr = targetL2Link['l2-link-attributes'] || {};
+                            setEditL2LinkRate(l2Attr.rate !== undefined ? String(l2Attr.rate) : '');
+                            setEditL2LinkDelay(l2Attr.delay !== undefined ? String(l2Attr.delay) : '');
+                            setEditL2LinkAutoNego(!!l2Attr['auto-nego']);
+                            setEditL2LinkDuplex(l2Attr.duplex || 'full');
+                            setIsEditingL2Link(true);
+                          }}
+                          className="text-xs text-indigo-400 hover:text-indigo-300 font-semibold font-mono"
+                        >
+                          Edit Attributes
+                        </button>
+                      )}
+                    </div>
+
+                    {l2LinkError && (
+                      <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg animate-slide-in font-mono">
+                        {l2LinkError}
+                      </div>
+                    )}
+
+                    {hasL2LinkMismatch && (
+                      <div className="p-3 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs rounded-lg font-mono">
+                        ⚠️ DEGRADED STATE: Rate or Duplex configuration mismatch detected
+                      </div>
+                    )}
+
+                    {!isEditingL2Link ? (
+                      <div className="grid grid-cols-2 gap-4 text-xs font-mono bg-zinc-900/30 p-4 rounded-xl border border-zinc-900">
+                        <div>
+                          <span className="text-zinc-500 block">Link Speed Rate:</span>
+                          <span id="display-l2-link-rate" className="text-white font-semibold">
+                            {targetL2Link['l2-link-attributes']?.rate !== undefined
+                              ? `${targetL2Link['l2-link-attributes']?.rate} Gbps`
+                              : 'N/A'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block">Propagation Delay:</span>
+                          <span id="display-l2-link-delay" className="text-white font-semibold">
+                            {targetL2Link['l2-link-attributes']?.delay !== undefined
+                              ? `${targetL2Link['l2-link-attributes']?.delay} µs`
+                              : 'N/A'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block">Auto Negotiation:</span>
+                          <span id="display-l2-link-autonego" className="text-white font-semibold">
+                            {targetL2Link['l2-link-attributes']?.['auto-nego'] ? 'Enabled' : 'Disabled'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block">Duplex Mode:</span>
+                          <span id="display-l2-link-duplex" className="text-white font-semibold">
+                            {targetL2Link['l2-link-attributes']?.duplex || 'N/A'}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSaveL2LinkAttributes} className="space-y-4 bg-zinc-900/40 p-4 rounded-xl border border-zinc-900">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-[10px] text-zinc-500 uppercase block mb-1">Transmission Rate (Gbps)</label>
+                            <input
+                              id="input-l2-link-rate"
+                              type="text"
+                              placeholder="e.g. 10"
+                              value={editL2LinkRate}
+                              onChange={(e) => setEditL2LinkRate(e.target.value)}
+                              className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-zinc-500 uppercase block mb-1">Propagation Delay (µs)</label>
+                            <input
+                              id="input-l2-link-delay"
+                              type="text"
+                              placeholder="e.g. 50"
+                              value={editL2LinkDelay}
+                              onChange={(e) => setEditL2LinkDelay(e.target.value)}
+                              className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-mono outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-[10px] text-zinc-500 uppercase block mb-1">Duplex Mode</label>
+                            <select
+                              id="input-l2-link-duplex"
+                              value={editL2LinkDuplex}
+                              onChange={(e) => setEditL2LinkDuplex(e.target.value)}
+                              className="bg-background border border-border rounded p-1.5 w-full text-white text-xs font-sans outline-none"
+                            >
+                              <option value="full">full</option>
+                              <option value="half">half</option>
+                            </select>
+                          </div>
+                          <div className="flex items-center gap-2 pt-4">
+                            <input
+                              id="input-l2-link-autonego"
+                              type="checkbox"
+                              checked={editL2LinkAutoNego}
+                              onChange={(e) => setEditL2LinkAutoNego(e.target.checked)}
+                              className="rounded border border-border bg-background outline-none shrink-0"
+                            />
+                            <label htmlFor="input-l2-link-autonego" className="text-xs text-zinc-300 font-sans cursor-pointer select-none">
+                              Enable Auto-Negotiation
+                            </label>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 justify-end pt-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setIsEditingL2Link(false);
+                              setL2LinkError(null);
+                            }}
+                            className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold py-1.5 px-3 rounded text-xs"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            id="btn-l2-link-save"
+                            type="submit"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-1.5 px-3 rounded text-xs"
+                          >
+                            Save Attributes
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+                )}
 
               </div>
             ) : (
@@ -1851,6 +2950,150 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
                   <div className="font-bold">Scenario 5: Loop Auditing</div>
                   <p className="text-[10px] text-zinc-500 mt-1">Audit transitive link reference recursion loops and protect datastore integrity.</p>
                 </button>
+
+                <button
+                  id="bdd-scenario-8-btn"
+                  onClick={() => {
+                    setActiveScenario('transceiver-client-ports');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'transceiver-client-ports'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 8: Transceiver client ports</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Verify access ports mapping and physical transceiver signals compatibility.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-9-btn"
+                  onClick={() => {
+                    setActiveScenario('dot1q-vlan-classifier');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'dot1q-vlan-classifier'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 9: Dot1q VLAN classifier</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Validate tag-type, VLAN mode range and single ID rules.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-10-btn"
+                  onClick={() => {
+                    setActiveScenario('dot1q-priority-mapping');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'dot1q-priority-mapping'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 10: Dot1q priority mapping</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Check priorities, traffic class and transmission selection maps.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-11-btn"
+                  onClick={() => {
+                    setActiveScenario('dot1q-forwarding-filtering');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'dot1q-forwarding-filtering'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 11: Dot1q forwarding/filtering</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Verify ingress filtering and static filtering entries mapping.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-12-btn"
+                  onClick={() => {
+                    setActiveScenario('dot1q-statistics');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'dot1q-statistics'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 12: Dot1q statistics</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Query, simulate and reset bridge port statistics counters.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-13-btn"
+                  onClick={() => {
+                    setActiveScenario('l2-node-attributes');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'l2-node-attributes'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 13: L2 Node attributes</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Validate management-mac, vlan and bridge-id node values.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-14-btn"
+                  onClick={() => {
+                    setActiveScenario('l2-link-attributes');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'l2-link-attributes'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 14: L2 Link attributes</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Verify rate, delay, autonego and duplex link mismatches.</p>
+                </button>
+
+                <button
+                  id="bdd-scenario-15-btn"
+                  onClick={() => {
+                    setActiveScenario('l2-tp-attributes');
+                    setScenarioStatus('idle');
+                    setScenarioLogs([]);
+                    setScenarioJson('');
+                  }}
+                  className={`w-full text-left p-3 rounded-lg border transition-all ${
+                    activeScenario === 'l2-tp-attributes'
+                      ? 'bg-emerald-600/10 border-emerald-500 text-white'
+                      : 'bg-zinc-900/40 border-zinc-850 text-zinc-400 hover:bg-zinc-800'
+                  }`}
+                >
+                  <div className="font-bold">Scenario 15: L2 TP attributes</div>
+                  <p className="text-[10px] text-zinc-500 mt-1">Validate encapsulation-type and outer/inner vlan tag port configs.</p>
+                </button>
               </div>
 
               <button
@@ -1886,7 +3129,7 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
                         'text-zinc-300'
                       }`}>
                         <span className="text-zinc-650 font-bold">[{i+1}]</span>
-                        <p>{log}</p>
+                        <p>{renderLogLine(log)}</p>
                       </div>
                     ))}
                   </div>

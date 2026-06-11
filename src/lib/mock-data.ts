@@ -2,7 +2,7 @@
 import { Device, Link, Service, Slice, Context, Topology, QKDDevice } from '../types/tfs';
 
 export const MOCK_CONTEXTS: Context[] = [
-  { id: 'admin', name: 'Admin Context', topology_ids: ['admin-topo'], service_ids: ['svc-1', 'svc-2'], slice_ids: ['slice-1'] },
+  { id: 'admin', name: 'Admin Context', topology_ids: ['admin-topo'], service_ids: ['svc-1', 'svc-2', 'svc-trans-client-1'], slice_ids: ['slice-1'] },
   { id: 'tenant-a', name: 'Tenant A', topology_ids: ['tenant-a-topo'], service_ids: [], slice_ids: [] },
 ];
 
@@ -93,9 +93,81 @@ export const MOCK_LINKS: Link[] = [
 export const MOCK_SERVICES: Service[] = [
   { id: 'svc-1', name: 'L3VPN-Enterprise', type: 'L3VPN', status: 'ACTIVE', context_id: 'admin', endpoints: ['d1/eth0', 'd3/p3'] },
   { id: 'svc-2', name: 'L2VPN-Backup', type: 'L2VPN', status: 'PENDING', context_id: 'admin', endpoints: ['d2/eth2', 'd3/p1'] },
+  {
+    id: 'svc-trans-client-1',
+    name: 'Ethernet-Over-OTN-Core',
+    type: 'Transport-Client',
+    status: 'ACTIVE',
+    context_id: 'admin',
+    endpoints: ['node-L3-TK-router/tp-L3-TK-ge1', 'node-L3-OS-router/tp-L3-OS-ge1'],
+    clientSvc: {
+      'client-svc-instances': [
+        {
+          'client-svc-name': 'Client-Svc-100G-A',
+          'client-svc-title': 'Ethernet-Over-OTN-Core',
+          'user-label': 'Core-Ethernet-Trunk-A',
+          'client-svc-descr': 'Point-to-Point 100G Ethernet Client Service mapped onto underlay OTN TE tunnel link-OTN-TK-to-OS.',
+          'client-svc-customer': 'Tenant-Finance-Global',
+          'admin-status': 'up',
+          'operational-state': 'up',
+          'provisioning-state': 'active',
+          direction: 'bi-directional',
+          'alarm-threshold': {
+            'latency-threshold': 5000
+          },
+          latency: 4200,
+          'src-access-ports': {
+            'access-node-id': '10.0.0.1',
+            'access-node-uri': 'node-L3-TK-router',
+            'access-ltp-id': '101',
+            'access-ltp-uri': 'tp-L3-TK-ge1',
+            'client-signal': 'l1-types:ETH-100Gb-LAN'
+          },
+          'dst-access-ports': {
+            'access-node-id': '10.0.0.3',
+            'access-node-uri': 'node-L3-OS-router',
+            'access-ltp-id': '301',
+            'access-ltp-uri': 'tp-L3-OS-ge1',
+            'client-signal': 'l1-types:ETH-100Gb-LAN'
+          },
+          'svc-tunnels': [
+            { 'tunnel-name': 'tunnel-OTN-TK-to-OS-100G' }
+          ],
+          'pm-state': {
+            'laser-bias-current': 35.2,
+            'optical-power-rx': -4.8,
+            'optical-power-tx': 1.2
+          },
+          metadata: {
+            'created-by': 'admin-controller',
+            'creation-time': '2026-06-11T12:00:00Z',
+            'last-updated-by': 'provisioner-bot',
+            'last-updated-time': '2026-06-11T12:05:00Z',
+            'owned-by': 'enterprise-finance'
+          }
+        }
+      ]
+    }
+  }
 ];
 
 export const MOCK_SLICES: Slice[] = [
   { id: 'slice-1', name: '5G-Enhanced-Mobile-Broadband', type: 'eMBB', status: 'ACTIVE', context_id: 'admin', service_ids: ['svc-1'] },
   { id: 'slice-2', name: 'Ultra-Reliable-Low-Latency', type: 'URLLC', status: 'ACTIVE', context_id: 'admin', service_ids: [] },
+  { 
+    id: 'slice-3', 
+    name: 'OTN-Optical-Slice-Alpha', 
+    type: 'OTN', 
+    status: 'ACTIVE', 
+    context_id: 'admin', 
+    service_ids: [],
+    otn: {
+      'odu-signal-quality': {
+        'odu-pm-objective': [
+          { duration: 'pm-15m', 'pm-type': 'odu-ses', 'pm-threshold': 15 },
+          { duration: 'pm-24h', 'pm-type': 'odu-ber', 'pm-threshold': 100 }
+        ]
+      }
+    }
+  }
 ];

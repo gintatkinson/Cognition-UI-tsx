@@ -18,10 +18,17 @@ import {
   SupportingLink,
   RFC8345Link,
   RFC8345TerminationPoint,
-  SupportingTerminationPoint
+  SupportingTerminationPoint,
+  OtnNrpProfile,
+  OtnNrpObjective,
+  Dot1qTagClassifier,
+  Dot1qPriorityMapping,
+  Dot1qForwardingFiltering,
+  Dot1qBridgePortStatistics
 } from '../types';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, connectFirestoreEmulator } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, connectFirestoreEmulator, doc, setDoc } from 'firebase/firestore';
+import { Slice, OduPmObjective } from '../types/tfs';
 import hardwareSpecs from '../lib/hardware-specs.json';
 import { MOCK_DEVICES, MOCK_LINKS } from '../lib/mock-data';
 
@@ -37,6 +44,7 @@ export class NetworkService {
   private passiveDevices: PassiveDevice[] = [];
   private passiveCables: PassiveCable[] = [];
   private rfc8345Networks: RFC8345Network[] = [];
+  private slices: Slice[] = [];
 
   private constructor() {
     this.topology = { nodes: [], links: [] };
@@ -50,6 +58,7 @@ export class NetworkService {
       const passiveDevicesSnap = await getDocs(collection(db, 'passive-devices'));
       const passiveCablesSnap = await getDocs(collection(db, 'passive-cables'));
       const rfcNetworksSnap = await getDocs(collection(db, 'rfc8345-networks'));
+      const slicesSnap = await getDocs(collection(db, 'slices'));
       
       const dbNodes = nodesSnap.docs.map(d => d.data() as NetworkElement);
       const dbLinks = linksSnap.docs.map(d => d.data() as NetworkLink);
@@ -76,16 +85,81 @@ export class NetworkService {
               currentDatetime: new Date().toISOString()
             }
           },
-          ietfInterfaces: dev.endpoints.map((ep: string) => ({
-            name: ep,
-            type: ep.startsWith('q') ? 'iana-if-type:opticalChannel' : 'iana-if-type:ethernetCsmacd',
-            enabled: dev.status === 'OPERATIONAL',
-            adminStatus: dev.status === 'OPERATIONAL' ? 'up' : 'down',
-            operStatus: dev.status === 'OPERATIONAL' ? 'up' : 'down',
-            speed: ep.startsWith('q') ? 1200000 : 100000000000,
-            physAddress: ep.startsWith('q') ? 'N/A' : `00:1A:2B:3C:${dev.id === 'd1' ? '11' : '22'}:${ep === 'eth0' ? '00' : '01'}`,
-            description: `Active Core ${ep.startsWith('q') ? 'Quantum' : 'Ethernet'} Interface`
-          })),
+          ietfInterfaces: dev.endpoints.map((ep: string) => {
+            const baseIface: any = {
+              name: ep,
+              type: ep.startsWith('q') ? 'iana-if-type:opticalChannel' : 'iana-if-type:ethernetCsmacd',
+              enabled: dev.status === 'OPERATIONAL',
+              adminStatus: dev.status === 'OPERATIONAL' ? 'up' : 'down',
+              operStatus: dev.status === 'OPERATIONAL' ? 'up' : 'down',
+              speed: ep.startsWith('q') ? 1200000 : 100000000000,
+              physAddress: ep.startsWith('q') ? 'N/A' : `00:1A:2B:3C:${dev.id === 'd1' ? '11' : '22'}:${ep === 'eth0' ? '00' : '01'}`,
+              description: `Active Core ${ep.startsWith('q') ? 'Quantum' : 'Ethernet'} Interface`
+            };
+            if (dev.id === 'd1' && ep === 'eth0') {
+              baseIface['dot1q-bridge-port-vlan'] = {
+                'tag-type': 'c-vlan',
+                'vlan-mode': 'range',
+                'vlan-ids': '10,20-30,50-100'
+              };
+              baseIface['dot1q-priority-mapping'] = {
+                'priority-regeneration-table': {
+                  priority0: 0,
+                  priority1: 1,
+                  priority2: 2,
+                  priority3: 3,
+                  priority4: 4,
+                  priority5: 5,
+                  priority6: 6,
+                  priority7: 7
+                },
+                'traffic-class-table': {
+                  'num-traffic-class': 8,
+                  'traffic-class-map': [
+                    { priority: 0, 'traffic-class': 0 },
+                    { priority: 1, 'traffic-class': 1 },
+                    { priority: 2, 'traffic-class': 2 },
+                    { priority: 3, 'traffic-class': 3 },
+                    { priority: 4, 'traffic-class': 4 },
+                    { priority: 5, 'traffic-class': 5 },
+                    { priority: 6, 'traffic-class': 6 },
+                    { priority: 7, 'traffic-class': 7 }
+                  ]
+                },
+                'transmission-selection-table': [
+                  { 'traffic-class': 0, 'transmission-selection-algorithm': 'strict-priority' },
+                  { 'traffic-class': 1, 'transmission-selection-algorithm': 'strict-priority' },
+                  { 'traffic-class': 2, 'transmission-selection-algorithm': 'strict-priority' },
+                  { 'traffic-class': 3, 'transmission-selection-algorithm': 'strict-priority' },
+                  { 'traffic-class': 4, 'transmission-selection-algorithm': 'strict-priority' },
+                  { 'traffic-class': 5, 'transmission-selection-algorithm': 'strict-priority' },
+                ]
+              };
+              baseIface['dot1q-forwarding-filtering'] = {
+                'ingress-filtering': true,
+                'acceptable-frame-types': 'admit-all',
+                'enable-filtering': true,
+                'static-filtering-entries': [
+                  {
+                    'address': '00:1A:2B:3C:4D:5E',
+                    'vlan-id': 10,
+                    'port-map': [
+                      { 'port-ref': 'eth0', 'control-element': 'forward' },
+                      { 'port-ref': 'eth1', 'control-element': 'filter' }
+                    ]
+                  }
+                ]
+              };
+              baseIface['dot1q-statistics'] = {
+                'delay-exceeded-discards': 12,
+                'mtu-exceeded-discards': 5,
+                'discard-on-ingress-filtering': 42,
+                'discard-on-egress-filtering': 18,
+                'discard-inbound-acceptable-frame-type': 7
+              };
+            }
+            return baseIface;
+          }),
           hardware: [
             {
               uuid: `hw-ch-${dev.id}`,
@@ -153,13 +227,43 @@ export class NetworkService {
         };
       });
 
+      console.log(`dbNodes UUIDs: ${dbNodes.map(n => n.uuid).join(', ')}`);
+      console.log(`mappedMockNodes UUIDs: ${mappedMockNodes.map(n => n.uuid).join(', ')}`);
+      dbNodes.forEach(dbNode => {
+        const mockNode = mappedMockNodes.find(mn => mn.uuid === dbNode.uuid);
+        if (mockNode) {
+          console.log(`Found mockNode for dbNode: ${dbNode.uuid}`);
+          dbNode.ietfInterfaces?.forEach(dbIface => {
+            const mockIface = mockNode.ietfInterfaces?.find(mi => mi.name === dbIface.name);
+            if (mockIface) {
+              console.log(`  Found mockIface for dbIface: ${dbIface.name}, mockForwardingFiltering=${JSON.stringify(mockIface['dot1q-forwarding-filtering'])}`);
+              if (mockIface['dot1q-bridge-port-vlan'] && !dbIface['dot1q-bridge-port-vlan']) {
+                dbIface['dot1q-bridge-port-vlan'] = mockIface['dot1q-bridge-port-vlan'];
+              }
+              if (mockIface['dot1q-priority-mapping'] && !dbIface['dot1q-priority-mapping']) {
+                dbIface['dot1q-priority-mapping'] = mockIface['dot1q-priority-mapping'];
+              }
+              if (mockIface['dot1q-forwarding-filtering'] && !dbIface['dot1q-forwarding-filtering']) {
+                console.log(`    Copying dot1q-forwarding-filtering to dbIface ${dbIface.name}`);
+                dbIface['dot1q-forwarding-filtering'] = mockIface['dot1q-forwarding-filtering'];
+              }
+              if (mockIface['dot1q-statistics'] && !dbIface['dot1q-statistics']) {
+                console.log(`    Copying dot1q-statistics to dbIface ${dbIface.name}`);
+                dbIface['dot1q-statistics'] = mockIface['dot1q-statistics'];
+              }
+            }
+          });
+        }
+      });
+
       this.topology.nodes = [...dbNodes, ...mappedMockNodes];
       this.topology.links = [...dbLinks, ...mappedMockLinks];
       this.passiveDevices = passiveDevicesSnap.docs.map(d => d.data() as PassiveDevice);
       this.passiveCables = passiveCablesSnap.docs.map(d => d.data() as PassiveCable);
       this.rfc8345Networks = rfcNetworksSnap.docs.map(d => d.data() as RFC8345Network);
+      this.slices = slicesSnap.docs.map(d => d.data() as Slice);
       
-      console.log(`Loaded ${this.topology.nodes.length} nodes, ${this.topology.links.length} links, ${this.passiveDevices.length} passive devices, ${this.passiveCables.length} passive cables, and ${this.rfc8345Networks.length} RFC8345 networks from Firestore.`);
+      console.log(`Loaded ${this.topology.nodes.length} nodes, ${this.topology.links.length} links, ${this.passiveDevices.length} passive devices, ${this.passiveCables.length} passive cables, ${this.rfc8345Networks.length} RFC8345 networks, and ${this.slices.length} slices from Firestore.`);
     } catch (e) {
       console.error('Failed to load from Firestore:', e);
     }
@@ -174,6 +278,55 @@ export class NetworkService {
 
   public getTopology(): NetworkTopology {
     return this.topology;
+  }
+
+  public getSlices(): Slice[] {
+    return this.slices;
+  }
+
+  public async updateSliceObjectives(sliceId: string, objectives: OduPmObjective[]): Promise<void> {
+    const slice = this.slices.find(s => s.id === sliceId);
+    if (slice) {
+      if (!slice.otn) slice.otn = {};
+      if (!slice.otn['odu-signal-quality']) slice.otn['odu-signal-quality'] = {};
+      slice.otn['odu-signal-quality']['odu-pm-objective'] = objectives;
+    }
+    const docRef = doc(db, 'slices', sliceId);
+    const payload = {
+      otn: {
+        'odu-signal-quality': {
+          'odu-pm-objective': objectives
+        }
+      }
+    };
+    await setDoc(docRef, this.cleanUndefined(payload), { merge: true });
+  }
+
+  public async updateIETFLinkNrpProfile(networkId: string, linkId: string, profile: OtnNrpProfile | undefined): Promise<void> {
+    const network = this.rfc8345Networks.find(n => n.networkId === networkId);
+    if (!network) {
+      throw new Error(`Network ${networkId} not found.`);
+    }
+    const link = network.links?.find(l => l.linkId === linkId);
+    if (!link) {
+      throw new Error(`Link ${linkId} not found in network ${networkId}.`);
+    }
+
+    if (profile) {
+      // Enforce co-dependency constraint: network must have OTN topology type
+      if (!network.otnTopology) {
+        throw new Error("Configuration rejected: Link does not belong to an OTN topology network.");
+      }
+      // Enforce presence of nrps list when granularity is link-resource
+      if (profile['otn-nrp-granularity'] === 'link-resource' && (!profile.nrps || profile.nrps.length === 0)) {
+        throw new Error("Configuration rejected: link-resource granularity requires at least one NRP entry.");
+      }
+    }
+
+    link.otnNrpProfile = profile;
+
+    const docRef = doc(db, 'rfc8345-networks', networkId);
+    await setDoc(docRef, this.cleanUndefined(network), { merge: true });
   }
 
   public isInventoryTopologyActive(): boolean {
@@ -214,7 +367,61 @@ export class NetworkService {
       }
     }
   }
+  public updatePortDot1qVlan(nodeUuid: string, portName: string, config: Dot1qTagClassifier | undefined) {
+    const node = this.topology.nodes.find(n => n.uuid === nodeUuid);
+    if (node && node.ietfInterfaces) {
+      const iface = node.ietfInterfaces.find(i => i.name === portName);
+      if (iface) {
+        iface['dot1q-bridge-port-vlan'] = config;
+      }
+    }
+  }
 
+  public updatePortDot1qPriorityMapping(nodeUuid: string, portName: string, config: Dot1qPriorityMapping | undefined) {
+    const node = this.topology.nodes.find(n => n.uuid === nodeUuid);
+    if (node && node.ietfInterfaces) {
+      const iface = node.ietfInterfaces.find(i => i.name === portName);
+      if (iface) {
+        iface['dot1q-priority-mapping'] = config;
+      }
+    }
+  }
+
+  public updatePortDot1qForwardingFiltering(nodeUuid: string, portName: string, config: Dot1qForwardingFiltering | undefined) {
+    const node = this.topology.nodes.find(n => n.uuid === nodeUuid);
+    if (node && node.ietfInterfaces) {
+      const iface = node.ietfInterfaces.find(i => i.name === portName);
+      if (iface) {
+        iface['dot1q-forwarding-filtering'] = config;
+      }
+    }
+  }
+
+  public updatePortDot1qStatistics(nodeUuid: string, portName: string, config: Dot1qBridgePortStatistics | undefined) {
+    const node = this.topology.nodes.find(n => n.uuid === nodeUuid);
+    if (node && node.ietfInterfaces) {
+      const iface = node.ietfInterfaces.find(i => i.name === portName);
+      if (iface) {
+        iface['dot1q-statistics'] = config;
+      }
+    }
+  }
+
+  public resetPortDot1qStatistics(nodeUuid: string, portName: string) {
+    const node = this.topology.nodes.find(n => n.uuid === nodeUuid);
+    if (node && node.ietfInterfaces) {
+      const iface = node.ietfInterfaces.find(i => i.name === portName);
+      if (iface) {
+        iface['dot1q-statistics'] = {
+          'delay-exceeded-discards': 0,
+          'mtu-exceeded-discards': 0,
+          'discard-on-ingress-filtering': 0,
+          'discard-on-egress-filtering': 0,
+          'discard-inbound-acceptable-frame-type': 0
+        };
+      }
+    }
+  }
 
   public updateNodeGeoLocation(nodeUuid: string, locationObj: IETFGeoLocation) {
     const node = this.topology.nodes.find(n => n.uuid === nodeUuid);
@@ -296,13 +503,32 @@ export class NetworkService {
     this.rfc8345Networks.push(network);
   }
 
-  public updateRFC8345Network(network: RFC8345Network): void {
+  public async updateRFC8345Network(network: RFC8345Network): Promise<void> {
     const idx = this.rfc8345Networks.findIndex(n => n.networkId === network.networkId);
     if (idx !== -1) {
       // Run validation before committing
       this.validateNetworkTopology(network);
       this.rfc8345Networks[idx] = network;
+      const docRef = doc(db, 'rfc8345-networks', network.networkId);
+      await setDoc(docRef, this.cleanUndefined(network));
     }
+  }
+
+  private cleanUndefined(obj: any): any {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(item => this.cleanUndefined(item));
+    }
+    const cleaned: any = {};
+    for (const key of Object.keys(obj)) {
+      const val = obj[key];
+      if (val !== undefined) {
+        cleaned[key] = this.cleanUndefined(val);
+      }
+    }
+    return cleaned;
   }
 
   private validateNetworkTopology(network: RFC8345Network): void {
@@ -414,6 +640,79 @@ export class NetworkService {
 
         // Cycle analysis to prevent reference loops (US 34)
         this.detectLinkCycle(link.linkId, link.supportingLinks, new Set<string>(), network);
+      }
+    }
+
+    // 4. Verify L2 Topology and Node Constraints (Feature 51)
+    for (const node of network.nodes) {
+      if (node['l2-node-attributes']) {
+        const l2Attr = node['l2-node-attributes'];
+        if (l2Attr['management-vlan'] !== undefined && l2Attr['management-vlan'] !== null) {
+          const vlan = l2Attr['management-vlan'];
+          if (vlan < 1 || vlan > 4094 || !Number.isInteger(vlan)) {
+            throw new Error(`YANG Constraint Error: Management VLAN ID '${vlan}' must be an integer between 1 and 4094.`);
+          }
+        }
+        if (l2Attr['management-mac']) {
+          const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+          if (!macRegex.test(l2Attr['management-mac'])) {
+            throw new Error(`YANG Constraint Error: Management MAC address '${l2Attr['management-mac']}' must match standard IEEE 802 MAC-48 format.`);
+          }
+        }
+      }
+    }
+
+    // 5. Verify L2 Link Constraints (Feature 52)
+    if (network.links) {
+      for (const link of network.links) {
+        if (link['l2-link-attributes']) {
+          const l2Attr = link['l2-link-attributes'];
+          if (l2Attr.rate !== undefined && l2Attr.rate !== null) {
+            if (l2Attr.rate <= 0) {
+              throw new Error(`YANG Constraint Error: Link transmission rate '${l2Attr.rate}' must be a positive number.`);
+            }
+          }
+          if (l2Attr.delay !== undefined && l2Attr.delay !== null) {
+            if (l2Attr.delay <= 0) {
+              throw new Error(`YANG Constraint Error: Link propagation delay '${l2Attr.delay}' must be a positive integer.`);
+            }
+          }
+        }
+      }
+    }
+
+    // 6. Verify L2 TP Constraints (Feature 53)
+    for (const node of network.nodes) {
+      if (node.terminationPoints) {
+        for (const tp of node.terminationPoints) {
+          if (tp['l2-termination-point-attributes']) {
+            const l2Attr = tp['l2-termination-point-attributes'];
+            if (l2Attr['mac-address']) {
+              const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+              if (!macRegex.test(l2Attr['mac-address'])) {
+                throw new Error(`YANG Constraint Error: Hardware MAC address '${l2Attr['mac-address']}' on port '${tp.tpId}' must match standard IEEE 802 MAC-48 format.`);
+              }
+            }
+            if (l2Attr['outer-tag'] !== undefined && l2Attr['outer-tag'] !== null) {
+              const tag = l2Attr['outer-tag'];
+              if (tag < 1 || tag > 4094 || !Number.isInteger(tag)) {
+                throw new Error(`YANG Constraint Error: Outer VLAN Tag '${tag}' must be an integer between 1 and 4094.`);
+              }
+            }
+            if (l2Attr['inner-tag'] !== undefined && l2Attr['inner-tag'] !== null) {
+              const tag = l2Attr['inner-tag'];
+              if (tag < 1 || tag > 4094 || !Number.isInteger(tag)) {
+                throw new Error(`YANG Constraint Error: Inner VLAN Tag '${tag}' must be an integer between 1 and 4094.`);
+              }
+            }
+            if (l2Attr.vxlan && l2Attr.vxlan['vni-id'] !== undefined && l2Attr.vxlan['vni-id'] !== null) {
+              const vni = l2Attr.vxlan['vni-id'];
+              if (vni < 1 || vni > 16777215 || !Number.isInteger(vni)) {
+                throw new Error(`YANG Constraint Error: VXLAN VNI ID '${vni}' must be an integer between 1 and 16777215.`);
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -100,9 +100,16 @@ export function resolveManagedObject(text: string): ResolvedResource | null {
   }
 
   // 2. Slice list matches
-  const slc = MOCK_SLICES.find(s => s.id === trimmed || s.name === trimmed);
-  if (slc) {
-    return { id: slc.id, type: 'slice' };
+  try {
+    const slc = NetworkService.getInstance().getSlices().find(s => s.id === trimmed || s.name === trimmed);
+    if (slc) {
+      return { id: slc.id, type: 'slice' };
+    }
+  } catch (err) {
+    const slc = MOCK_SLICES.find(s => s.id === trimmed || s.name === trimmed);
+    if (slc) {
+      return { id: slc.id, type: 'slice' };
+    }
   }
   if (/^slice-[0-9a-zA-Z_-]+/i.test(trimmed)) {
     return { id: trimmed, type: 'slice' };

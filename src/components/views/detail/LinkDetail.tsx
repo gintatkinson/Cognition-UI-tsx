@@ -17,25 +17,19 @@ export function LinkDetail({ id, allNodes, onNavigate }: LinkDetailProps) {
   const [telemetry, setTelemetry] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch real-time telemetry from service layer asynchronously (simulating Twin pipeline stream)
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    NetworkService.getInstance().fetchRealtimeTelemetry(id, 'link')
-      .then(data => {
-        if (active) {
-          setTelemetry(data);
-          setLoading(false);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [id]);
+  // Feature 46 state
+  const [nrpGranularity, setNrpGranularity] = useState<'link' | 'link-resource'>('link');
+  const [nrpsList, setNrpsList] = useState<any[]>([]);
+  
+  // Adding form state
+  const [newNrpId, setNewNrpId] = useState<string>('');
+  const [newBandwidthChoice, setNewBandwidthChoice] = useState<'containers' | 'time-slots'>('containers');
+  const [newContainerType, setNewContainerType] = useState<'ODU2' | 'ODU4' | 'ODUflex'>('ODU2');
+  const [newTsNum, setNewTsNum] = useState<string>('');
+  
+  // Validation messages
+  const [nrpError, setNrpError] = useState<string | null>(null);
+  const [nrpSuccess, setNrpSuccess] = useState<string | null>(null);
 
   const getIETFLink = (linkId: string) => {
     const rfcNetworks = NetworkService.getInstance().getRFC8345Networks() || [];
@@ -44,7 +38,7 @@ export function LinkDetail({ id, allNodes, onNavigate }: LinkDetailProps) {
       if (found) {
         return {
           ...found,
-          networkId: net.networkId,
+          _networkId: net.networkId,
           _isLogical: true
         };
       }
@@ -65,14 +59,128 @@ export function LinkDetail({ id, allNodes, onNavigate }: LinkDetailProps) {
         },
         teMetrics: physicalLink.teMetrics,
         protection: physicalLink.protection,
-        networkId: 'Physical Topology',
+        _networkId: 'Physical Topology',
         sourceNodeUuid: physicalLink.sourceNodeUuid,
         targetNodeUuid: physicalLink.targetNodeUuid,
-        _isLogical: false
+        _isLogical: false,
+        otnNrpProfile: undefined
       };
     }
     return null;
   };
+
+  const ietfLink = getIETFLink(id);
+
+  // Sync NRP state from link data on load/change
+  useEffect(() => {
+    if (ietfLink) {
+      const profile = ietfLink.otnNrpProfile;
+      setNrpGranularity(profile?.['otn-nrp-granularity'] || 'link');
+      setNrpsList(profile?.nrps || []);
+      setNrpError(null);
+      setNrpSuccess(null);
+    }
+  }, [id, ietfLink?.linkId]);
+
+  const rfcNetworks = NetworkService.getInstance().getRFC8345Networks() || [];
+  const targetNetwork = rfcNetworks.find(n => n.networkId === ietfLink?._networkId);
+  const isOtnTopology = targetNetwork?.otnTopology === true;
+
+  const handleSaveNrpProfile = async () => {
+    setNrpError(null);
+    setNrpSuccess(null);
+
+    // Scenario 2: Reject if target network topology is not OTN
+    if (!isOtnTopology) {
+      setNrpError("Configuration rejected: Link does not belong to an OTN topology network.");
+      return;
+    }
+
+    // Validation: If link-resource, must contain at least one NRP entry
+    if (nrpGranularity === 'link-resource' && nrpsList.length === 0) {
+      setNrpError("Configuration rejected: link-resource granularity requires at least one NRP entry.");
+      return;
+    }
+
+    const profile = {
+      'otn-nrp-granularity': nrpGranularity,
+      nrps: nrpGranularity === 'link-resource' ? nrpsList : []
+    };
+
+    try {
+      if (ietfLink?._networkId) {
+        await NetworkService.getInstance().updateIETFLinkNrpProfile(ietfLink._networkId, ietfLink.linkId, profile);
+        setNrpSuccess("NRP partitioning profile successfully mapped on the MPI.");
+      }
+    } catch (err: any) {
+      setNrpError(err.message || "Failed to save NRP profile.");
+    }
+  };
+
+  const handleAddNrp = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNrpError(null);
+    setNrpSuccess(null);
+
+    const parsedNrpId = parseInt(newNrpId, 10);
+    if (isNaN(parsedNrpId) || parsedNrpId < 0) {
+      setNrpError("NRP ID must be a non-negative number.");
+      return;
+    }
+
+    // Duplicate check
+    const duplicate = nrpsList.some(n => n['nrp-id'] === parsedNrpId);
+    if (duplicate) {
+      setNrpError(`Duplicate NRP ID: Partition ${parsedNrpId} is already defined.`);
+      return;
+    }
+
+    const newNrp: any = {
+      'nrp-id': parsedNrpId,
+      'nrp-bandwidth': newBandwidthChoice
+    };
+
+    if (newBandwidthChoice === 'containers') {
+      newNrp['container-type'] = newContainerType;
+    } else {
+      const parsedTsNum = parseInt(newTsNum, 10);
+      if (isNaN(parsedTsNum) || parsedTsNum <= 0) {
+        setNrpError("Tributary slot count (otn-ts-num) must be a positive integer.");
+        return;
+      }
+      newNrp['otn-ts-num'] = parsedTsNum;
+    }
+
+    setNrpsList(prev => [...prev, newNrp]);
+    setNewNrpId('');
+    setNewTsNum('');
+  };
+
+  const handleDeleteNrp = (nrpId: number) => {
+    setNrpsList(prev => prev.filter(n => n['nrp-id'] !== nrpId));
+    setNrpError(null);
+    setNrpSuccess(null);
+  };
+
+  // Fetch real-time telemetry from service layer asynchronously (simulating Twin pipeline stream)
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    NetworkService.getInstance().fetchRealtimeTelemetry(id, 'link')
+      .then(data => {
+        if (active) {
+          setTelemetry(data);
+          setLoading(false);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [id]);
 
   const getLink = (linkId: string) => {
     const passiveCables = NetworkService.getInstance().getPassiveCables() || [];
@@ -96,7 +204,6 @@ export function LinkDetail({ id, allNodes, onNavigate }: LinkDetailProps) {
     return null;
   };
 
-  const ietfLink = getIETFLink(id);
   const link = getLink(id);
 
   if (!ietfLink && !link) {
@@ -225,7 +332,7 @@ export function LinkDetail({ id, allNodes, onNavigate }: LinkDetailProps) {
               <Zap className="w-5 h-5 text-indigo-400" />
               RFC 8345 Link Details
             </CardTitle>
-            <p className="text-[10px] text-muted-foreground font-mono mt-0.5">Topology network domain reference: {ietfLink?.networkId}</p>
+            <p className="text-[10px] text-muted-foreground font-mono mt-0.5">Topology network domain reference: {ietfLink?._networkId}</p>
           </div>
           <Badge className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-widest font-mono text-[10px] self-start md:self-auto">
             Operational
@@ -552,6 +659,201 @@ export function LinkDetail({ id, allNodes, onNavigate }: LinkDetailProps) {
           )}
         </CardContent>
       </Card>
+
+      {ietfLink && (
+        <Card className="bg-background border-border shadow-none" id="nrp-partitioning-panel">
+          <CardHeader className="border-b border-border pb-4">
+            <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Layers className="w-4 h-4 text-indigo-400" />
+              OTN Network Resource Partitioning (NRP) MPI Mapping
+            </CardTitle>
+            <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+              Configure MPI resource isolation on logical link:{' '}
+              <span 
+                className="cursor-pointer hover:underline text-indigo-400" 
+                onClick={() => onNavigate(ietfLink.linkId, 'link')}
+              >
+                {ietfLink.linkId}
+              </span>{' '}
+              in network:{' '}
+              <span 
+                className="cursor-pointer hover:underline text-indigo-400" 
+                onClick={() => onNavigate(ietfLink._networkId, 'network')}
+              >
+                {ietfLink._networkId}
+              </span>
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4 pt-4">
+            {nrpError && (
+              <div 
+                id="nrp-validation-error" 
+                className="p-3 rounded bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-mono"
+              >
+                {nrpError}
+              </div>
+            )}
+            {nrpSuccess && (
+              <div 
+                id="nrp-validation-success" 
+                className="p-3 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono"
+              >
+                {nrpSuccess}
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <label htmlFor="nrp-granularity" className="text-xs font-semibold text-zinc-300 block">
+                Slicing Granularity:
+              </label>
+              <select
+                id="nrp-granularity"
+                value={nrpGranularity}
+                onChange={(e) => setNrpGranularity(e.target.value as 'link' | 'link-resource')}
+                className="w-full max-w-xs bg-zinc-900 border border-border rounded p-2 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              >
+                <option value="link">Link (Whole Link)</option>
+                <option value="link-resource">Link-Resource (Subset of resources)</option>
+              </select>
+            </div>
+
+            {nrpGranularity === 'link-resource' && (
+              <div className="space-y-4 border border-border/60 rounded p-4 bg-muted/10">
+                <p className="text-xs font-bold text-zinc-300">Active NRP Objectives</p>
+                {nrpsList.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic">No NRPs defined. Add at least one partition configuration.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-xs font-mono text-zinc-300">
+                      <thead>
+                        <tr className="border-b border-border/85 pb-2">
+                          <th className="py-2">NRP ID</th>
+                          <th className="py-2">Bandwidth Choice</th>
+                          <th className="py-2">Value</th>
+                          <th className="py-2 text-right">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {nrpsList.map((nrp) => (
+                          <tr key={nrp['nrp-id']} className="border-b border-border/40 hover:bg-muted/20">
+                            <td className="py-2 font-bold">{nrp['nrp-id']}</td>
+                            <td className="py-2">{nrp['nrp-bandwidth']}</td>
+                            <td className="py-2">
+                              {nrp['nrp-bandwidth'] === 'containers'
+                                ? nrp['container-type']
+                                : `${nrp['otn-ts-num']} slot(s)`}
+                            </td>
+                            <td className="py-2 text-right">
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteNrp(nrp['nrp-id'])}
+                                className="text-rose-400 hover:text-rose-300 text-xs font-semibold focus:outline-none"
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+
+                <Separator className="bg-border/60" />
+
+                <form onSubmit={handleAddNrp} className="space-y-3">
+                  <p className="text-xs font-semibold text-zinc-200">Add NRP Partition</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="space-y-1">
+                      <label htmlFor="new-nrp-id" className="text-[10px] text-muted-foreground font-mono uppercase">
+                        NRP ID:
+                      </label>
+                      <input
+                        id="new-nrp-id"
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 101"
+                        value={newNrpId}
+                        onChange={(e) => setNewNrpId(e.target.value)}
+                        className="w-full bg-zinc-900 border border-border rounded p-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label htmlFor="new-nrp-bandwidth" className="text-[10px] text-muted-foreground font-mono uppercase">
+                        Bandwidth Mode:
+                      </label>
+                      <select
+                        id="new-nrp-bandwidth"
+                        value={newBandwidthChoice}
+                        onChange={(e) => setNewBandwidthChoice(e.target.value as 'containers' | 'time-slots')}
+                        className="w-full bg-zinc-900 border border-border rounded p-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      >
+                        <option value="containers">Containers</option>
+                        <option value="time-slots">Time Slots</option>
+                      </select>
+                    </div>
+
+                    {newBandwidthChoice === 'containers' ? (
+                      <div className="space-y-1">
+                        <label htmlFor="new-nrp-container" className="text-[10px] text-muted-foreground font-mono uppercase">
+                          Container Type:
+                        </label>
+                        <select
+                          id="new-nrp-container"
+                          value={newContainerType}
+                          onChange={(e) => setNewContainerType(e.target.value as 'ODU2' | 'ODU4' | 'ODUflex')}
+                          className="w-full bg-zinc-900 border border-border rounded p-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        >
+                          <option value="ODU2">ODU2</option>
+                          <option value="ODU4">ODU4</option>
+                          <option value="ODUflex">ODUflex</option>
+                        </select>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <label htmlFor="new-nrp-ts-num" className="text-[10px] text-muted-foreground font-mono uppercase">
+                          Slot Count:
+                        </label>
+                        <input
+                          id="new-nrp-ts-num"
+                          type="number"
+                          min="1"
+                          placeholder="e.g. 8"
+                          value={newTsNum}
+                          onChange={(e) => setNewTsNum(e.target.value)}
+                          className="w-full bg-zinc-900 border border-border rounded p-1.5 text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex items-end">
+                      <Button
+                        id="add-nrp-btn"
+                        type="submit"
+                        variant="secondary"
+                        className="w-full h-8 text-xs font-semibold"
+                      >
+                        Add Partition
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            <div className="pt-2 flex justify-end">
+              <Button
+                id="save-nrp-profile-btn"
+                onClick={handleSaveNrpProfile}
+                className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2"
+              >
+                Save NRP Configuration
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <LinkPlacementCard 
         nodeAId={sourceNodeId} 

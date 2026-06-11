@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { MOCK_SERVICES, MOCK_SLICES } from '@/lib/mock-data';
+import { MOCK_SERVICES } from '@/lib/mock-data';
 import { NetworkService } from '../../services/networkService';
 import { AIInsightsCard } from '../AIInsightsCard';
 import { DeviceDetail } from './detail/DeviceDetail';
@@ -33,8 +33,13 @@ export function DetailView({ item, onNavigate, onBack }: DetailViewProps) {
   const networkTopology = NetworkService.getInstance().getTopology();
 
   const getIETFNode = (id: string) => {
-    const physical = networkTopology.nodes.find(n => n.uuid === id);
+    let physical = networkTopology.nodes.find(n => n.uuid === id);
     if (physical) return physical;
+    if (id.startsWith('node-')) {
+      const clean = id.substring(5);
+      physical = networkTopology.nodes.find(n => n.uuid === clean);
+      if (physical) return physical;
+    }
     const rfcNetworks = NetworkService.getInstance().getRFC8345Networks() || [];
     for (const net of rfcNetworks) {
       const rn = net.nodes.find(n => n.nodeId === id || n.name === id);
@@ -45,8 +50,13 @@ export function DetailView({ item, onNavigate, onBack }: DetailViewProps) {
 
   const getDevice = (deviceId: string) => {
     const passiveDevices = NetworkService.getInstance().getPassiveDevices() || [];
-    const pd = passiveDevices.find(d => d.id === deviceId);
+    let pd = passiveDevices.find(d => d.id === deviceId);
     if (pd) return pd;
+    if (deviceId.startsWith('node-')) {
+      const clean = deviceId.substring(5);
+      pd = passiveDevices.find(d => d.id === clean);
+      if (pd) return pd;
+    }
     const activeMockDevices = [
       { id: 'd1', name: 'R1-Core' },
       { id: 'd2', name: 'R2-Core' },
@@ -56,7 +66,14 @@ export function DetailView({ item, onNavigate, onBack }: DetailViewProps) {
       { id: 'q2', name: 'QKD-Node-Beta' },
       { id: 'q3', name: 'QKD-Node-Gamma' }
     ];
-    return activeMockDevices.find(d => d.id === deviceId);
+    let found = activeMockDevices.find(d => d.id === deviceId);
+    if (found) return found;
+    if (deviceId.startsWith('node-')) {
+      const clean = deviceId.substring(5);
+      found = activeMockDevices.find(d => d.id === clean);
+      if (found) return found;
+    }
+    return null;
   };
 
   const getTitle = () => {
@@ -64,7 +81,7 @@ export function DetailView({ item, onNavigate, onBack }: DetailViewProps) {
       case 'device': return getIETFNode(item.id)?.name || getDevice(item.id)?.name || item.id;
       case 'link': return `Link: ${item.id}`;
       case 'service': return MOCK_SERVICES.find(s => s.id === item.id)?.name || item.id;
-      case 'slice': return MOCK_SLICES.find(s => s.id === item.id)?.name || item.id;
+      case 'slice': return NetworkService.getInstance().getSlices().find(s => s.id === item.id)?.name || item.id;
       case 'port': return `Port: ${item.id}`;
       case 'hardware': return `Hardware: ${item.id}`;
       case 'channel': return `Channel: ${item.id}`;
@@ -104,7 +121,7 @@ export function DetailView({ item, onNavigate, onBack }: DetailViewProps) {
         return { id: item.id };
       }
       case 'service': return MOCK_SERVICES.find(s => s.id === item.id);
-      case 'slice': return MOCK_SLICES.find(s => s.id === item.id);
+      case 'slice': return NetworkService.getInstance().getSlices().find(s => s.id === item.id);
       case 'port': 
       case 'channel': {
         const firstSlashIdx = item.id.indexOf('/');
@@ -148,7 +165,7 @@ export function DetailView({ item, onNavigate, onBack }: DetailViewProps) {
   };
 
   return (
-    <div className="space-y-8" key={refreshKey}>
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={onBack} className="text-muted-foreground hover:text-foreground/90">

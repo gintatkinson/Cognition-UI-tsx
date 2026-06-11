@@ -22,7 +22,6 @@ import {
   Area
 } from 'recharts';
 import { NetworkService } from '../../services/networkService';
-import { MOCK_SLICES } from '@/lib/mock-data';
 import { AIInsightsCard } from '../AIInsightsCard';
 
 const data = [
@@ -50,7 +49,7 @@ export function DashboardView({ onNavigate }: DashboardViewProps) {
     { label: 'Total IETF Nodes', value: topology.nodes.length, icon: Router, color: 'text-blue-500', trend: '+2', trendType: 'up' },
     { label: 'Terminating Services', value: activeServicesCount, icon: Activity, color: 'text-emerald-500', trend: '+1', trendType: 'up' },
     { label: 'Network Links', value: topology.links.length, icon: Share2, color: 'text-purple-500', trend: '0', trendType: 'neutral' },
-    { label: 'Slices', value: MOCK_SLICES.length, icon: Layers, color: 'text-orange-500', trend: '+1', trendType: 'up' },
+    { label: 'Slices', value: NetworkService.getInstance().getSlices().length, icon: Layers, color: 'text-orange-500', trend: '+1', trendType: 'up' },
   ];
 
   return (

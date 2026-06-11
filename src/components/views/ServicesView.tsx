@@ -32,7 +32,7 @@ interface ServicesViewProps {
   selectedTypes?: string[];
 }
 
-export function ServicesView({ onNavigate, selectedTypes = ['L3VPN', 'L2VPN', 'QKD'] }: ServicesViewProps) {
+export function ServicesView({ onNavigate, selectedTypes = ['L3VPN', 'L2VPN', 'QKD', 'Transport-Client'] }: ServicesViewProps) {
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([]);
   const [highlightedServiceId, setHighlightedServiceId] = useState<string | null>(null);
   const [isGraphMaximized, setIsGraphMaximized] = useState(false);

@@ -6,6 +6,7 @@ const ALLOWED_LINK_PROPERTIES = new Set([
   'uuid', 'linkId', 'sourceNodeUuid', 'sourcePortUuid', 'targetNodeUuid', 'targetPortUuid',
   'layer', 'capacity', 'usage', 'inventoryMappingAttributes', 'teMetrics', 'protection',
   'source', 'destination', 'supportingLinks', 'otnLink', 'fgotnList', 'fgtsRange',
+  'otnNrpProfile',
   '_isRFC8345', '_networkId' // UI enrichments in DetailView.tsx
 ]);
 

@@ -35,8 +35,8 @@ export default function App() {
   const [currentContext, setCurrentContext] = useState('admin');
   const [selectedDeviceTypes, setSelectedDeviceTypes] = useState<string[]>(['ROUTER', 'SWITCH', 'QKD_NODE', 'OPTICAL_SWITCH', 'SATELLITE', 'gNB_NTN']);
   const [selectedLinkTypes, setSelectedLinkTypes] = useState<string[]>(['L3_IP_MPLS', 'L2_ETHERNET', 'L0_OPTICAL']);
-  const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>(['L3VPN', 'L2VPN', 'QKD']);
-  const [selectedSliceTypes, setSelectedSliceTypes] = useState<string[]>(['eMBB', 'URLLC', 'mMTC']);
+  const [selectedServiceTypes, setSelectedServiceTypes] = useState<string[]>(['L3VPN', 'L2VPN', 'QKD', 'Transport-Client']);
+  const [selectedSliceTypes, setSelectedSliceTypes] = useState<string[]>(['eMBB', 'URLLC', 'mMTC', 'OTN']);
   const [navHistory, setNavHistory] = useState<{ id: string, type: 'device' | 'link' | 'service' | 'slice' | 'port' | 'hardware' | 'channel' | 'acl' }[]>([]);
   const [previousTab, setPreviousTab] = useState('dashboard');
 

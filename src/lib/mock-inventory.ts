@@ -475,6 +475,147 @@ export function getRFC8345Networks(): RFC8345Network[] {
             ],
             nodes: l3Nodes,
             links: l3Links
+        },
+        {
+            networkId: "carrier-ethernet-L2",
+            name: "L2 Carrier Ethernet Network",
+            description: "Layer 2 Carrier Ethernet Network conforming to ietf-l2-topology.",
+            networkTypes: {
+                type: "L2-ethernet",
+                "l2-topology": {}
+            },
+            "l2-topology-attributes": {
+                name: "Carrier-Ethernet-L2-Topology",
+                flags: []
+            },
+            nodes: [
+                {
+                    nodeId: "node-L2-TK-switch",
+                    name: "Tokyo L2 Aggregation Switch",
+                    description: "High-performance L2 switch in Tokyo site.",
+                    terminationPoints: [
+                        {
+                            tpId: "tp-L2-TK-eth0",
+                            "l2-termination-point-attributes": {
+                                "interface-name": "eth0",
+                                "mac-address": "00:11:22:33:44:55",
+                                "port-number": [1],
+                                "unnumbered-id": [10],
+                                "encapsulation-type": "vlan",
+                                "outer-tag": 100,
+                                "outer-tpid": 33024,
+                                lag: false
+                            }
+                        },
+                        {
+                            tpId: "tp-L2-TK-eth1",
+                            "l2-termination-point-attributes": {
+                                "interface-name": "eth1",
+                                "mac-address": "00:11:22:33:44:66",
+                                "port-number": [2],
+                                "unnumbered-id": [20],
+                                "encapsulation-type": "vxlan",
+                                vxlan: {
+                                    "vni-id": 5000
+                                },
+                                lag: false
+                            }
+                        }
+                    ],
+                    "l2-node-attributes": {
+                        name: "L2-TK-SW",
+                        flags: ["active"],
+                        "bridge-id": ["00:11:22:33:44:55"],
+                        "management-address": ["10.0.2.1"],
+                        "management-mac": "00:11:22:33:44:55",
+                        "management-vlan": 100
+                    }
+                },
+                {
+                    nodeId: "node-L2-OS-switch",
+                    name: "Osaka L2 Edge Switch",
+                    description: "L2 edge switch in Osaka site.",
+                    terminationPoints: [
+                        {
+                            tpId: "tp-L2-OS-eth0"
+                        }
+                    ],
+                    "l2-node-attributes": {
+                        name: "L2-OS-SW",
+                        flags: ["active"],
+                        "bridge-id": ["00:66:77:88:99:AA"],
+                        "management-address": ["10.0.2.2"],
+                        "management-mac": "00:66:77:88:99:AA",
+                        "management-vlan": 200
+                    }
+                }
+            ],
+            links: [
+                {
+                    linkId: "link-L2-TK-to-OS",
+                    source: {
+                        sourceNode: "node-L2-TK-switch",
+                        sourceTp: "tp-L2-TK-eth0"
+                    },
+                    destination: {
+                        destNode: "node-L2-OS-switch",
+                        destTp: "tp-L2-OS-eth0"
+                    },
+                    teMetrics: {
+                        defaultMetric: 10,
+                        administrativeGroup: "0x00000001",
+                        priorityLevel: "Priority 3 (Gold Class)",
+                        oneWayDelay: "1.2 ms",
+                        delayVariation: "0.01 ms",
+                        packetLoss: "0.0000% (Protected)"
+                    },
+                    protection: {
+                        protectionType: "none",
+                        dynamicRestoration: "none",
+                        switchoverTime: "N/A",
+                        srlgs: [100, 200]
+                    },
+                    "l2-link-attributes": {
+                        rate: 10,
+                        delay: 50,
+                        "auto-nego": true,
+                        duplex: "full",
+                        flags: ["active"]
+                    }
+                },
+                {
+                    linkId: "link-L2-OS-to-TK",
+                    source: {
+                        sourceNode: "node-L2-OS-switch",
+                        sourceTp: "tp-L2-OS-eth0"
+                    },
+                    destination: {
+                        destNode: "node-L2-TK-switch",
+                        destTp: "tp-L2-TK-eth0"
+                    },
+                    teMetrics: {
+                        defaultMetric: 10,
+                        administrativeGroup: "0x00000001",
+                        priorityLevel: "Priority 3 (Gold Class)",
+                        oneWayDelay: "1.2 ms",
+                        delayVariation: "0.01 ms",
+                        packetLoss: "0.0000% (Protected)"
+                    },
+                    protection: {
+                        protectionType: "none",
+                        dynamicRestoration: "none",
+                        switchoverTime: "N/A",
+                        srlgs: [100, 200]
+                    },
+                    "l2-link-attributes": {
+                        rate: 10,
+                        delay: 50,
+                        "auto-nego": true,
+                        duplex: "full",
+                        flags: ["active"]
+                    }
+                }
+            ]
         }
     ];
 }
