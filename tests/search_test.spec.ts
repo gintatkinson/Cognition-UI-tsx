@@ -57,9 +57,12 @@ test('verify R1-Core search and details page in GUI', async ({ page }) => {
 
   // Authenticate if Continue with Google is present
   const googleLoginButton = page.locator('button', { hasText: 'Continue with Google' });
-  if (await googleLoginButton.count() > 0) {
+  try {
+    await googleLoginButton.waitFor({ state: 'visible', timeout: 3000 });
     await googleLoginButton.click();
     await page.waitForTimeout(1000);
+  } catch (e) {
+    // Already logged in
   }
 
   // 2. Go to Devices tab
@@ -103,9 +106,12 @@ test('verify R1-Core hardware containment tree in IETF Explorer view', async ({ 
 
   // Authenticate if Continue with Google is present
   const googleLoginButton = page.locator('button', { hasText: 'Continue with Google' });
-  if (await googleLoginButton.count() > 0) {
+  try {
+    await googleLoginButton.waitFor({ state: 'visible', timeout: 3000 });
     await googleLoginButton.click();
     await page.waitForTimeout(1000);
+  } catch (e) {
+    // Already logged in
   }
 
   // 2. Go to IETF Domains tab
@@ -158,9 +164,12 @@ test('verify no "Part: ---" placeholder exists in any device hardware containmen
   await page.goto('/');
   await page.waitForTimeout(1500);
   const googleLoginButton = page.locator('button', { hasText: 'Continue with Google' });
-  if (await googleLoginButton.count() > 0) {
+  try {
+    await googleLoginButton.waitFor({ state: 'visible', timeout: 3000 });
     await googleLoginButton.click();
     await page.waitForTimeout(1000);
+  } catch (e) {
+    // Already logged in
   }
   // 2. Go to IETF Domains tab
   const explorerNavButton = page.locator('nav button', { hasText: 'IETF Domains' });

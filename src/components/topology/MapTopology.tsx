@@ -257,7 +257,7 @@ export function MapTopology({
             >
               <PolylineGraphics
                 positions={[sourcePos, targetPos]}
-                width={highlightedLinks.includes(l.id) ? 4.5 : (l.type === 'QUANTUM' ? 2.5 : 1.8)}
+                width={highlightedLinks.includes(l.id) ? 2.5 : (l.type === 'QUANTUM' ? 1.2 : 0.8)}
                 material={getLinkColor(l)}
                 arcType={isElevated ? Cesium.ArcType.NONE : Cesium.ArcType.GEODESIC}
                 clampToGround={!isElevated}
