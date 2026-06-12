@@ -2385,7 +2385,13 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
                       {selectedNetwork.links && selectedNetwork.links.length > 0 ? (
                         <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                           {selectedNetwork.links.map((link) => (
-                            <div key={link.linkId} className="bg-zinc-900/50 hover:bg-zinc-900/85 p-3 rounded-xl border border-zinc-850 flex flex-col gap-2 relative group transition-all">
+                            <div
+                              key={link.linkId}
+                              onClick={() => setSelectedLinkId(link.linkId)}
+                              className={`bg-zinc-900/50 hover:bg-zinc-900/85 p-3 rounded-xl border flex flex-col gap-2 relative group transition-all cursor-pointer ${
+                                selectedLinkId === link.linkId ? 'border-indigo-500 bg-zinc-900/85' : 'border-zinc-850'
+                              }`}
+                            >
                               <div className="flex justify-between items-start">
                                 <div>
                                   <span className="font-bold text-white text-xs"><DrilldownLink id={link.linkId} type="link" onNavigate={onNavigate} /></span>
