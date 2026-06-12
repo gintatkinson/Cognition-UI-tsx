@@ -304,8 +304,11 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
       setL2NodeError(null);
       setIsEditingL2Node(false);
     }
-    setSelectedTpId('');
   }, [targetNode]);
+
+  React.useEffect(() => {
+    setSelectedTpId('');
+  }, [selectedNodeId]);
 
   React.useEffect(() => {
     if (targetL2Link) {
@@ -769,6 +772,8 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
 
   const handleSaveL2NodeAttributes = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("handleSaveL2NodeAttributes is called, VLAN:", editMgmtVlan, "MAC:", editMgmtMac);
+    setAlert(null);
     if (!selectedNetwork || !targetNode) return;
     
     if (editMgmtMac) {
@@ -814,6 +819,7 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
 
   const handleSaveL2LinkAttributes = async (e: React.FormEvent) => {
     e.preventDefault();
+    setAlert(null);
     if (!selectedNetwork || !targetL2Link) return;
 
     if (editL2LinkRate) {
@@ -860,7 +866,13 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
 
   const handleSaveL2TpAttributes = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedNetwork || !targetNode || !targetTp) return;
+    setAlert(null);
+    console.log("handleSaveL2TpAttributes is called, encapsulation:", l2TpEncapsulationType, "outerTag:", l2TpOuterTag, "innerTag:", l2TpInnerTag);
+    setL2TpValidationError(null);
+    if (!selectedNetwork || !targetNode || !targetTp) {
+      console.log("handleSaveL2TpAttributes: returned early because selectedNetwork, targetNode, or targetTp is missing:", !!selectedNetwork, !!targetNode, !!targetTp);
+      return;
+    }
 
     if (l2TpMacAddress) {
       const macRegex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
@@ -933,6 +945,7 @@ export function BaseNetworkTopologyView({ onNavigate }: BaseNetworkTopologyViewP
       setL2TpValidationError(null);
       triggerAlert('success', `L2 attributes updated for TP '${targetTp.tpId}' under node '${targetNode.nodeId}'.`);
     } catch (err: any) {
+      console.error("[SAVE TP ERROR]:", err);
       setL2TpValidationError(err.message);
     }
   };

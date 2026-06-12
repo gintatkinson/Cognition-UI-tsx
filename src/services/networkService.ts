@@ -489,7 +489,7 @@ export class NetworkService {
   // --- BASE NETWORK TOPOLOGY (RFC 8345) MANAGEMENT ---
 
   public getRFC8345Networks(): RFC8345Network[] {
-    return this.rfc8345Networks;
+    return [...this.rfc8345Networks];
   }
 
   public addRFC8345Network(network: RFC8345Network): void {
