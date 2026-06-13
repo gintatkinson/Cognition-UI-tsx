@@ -9,3 +9,5 @@ coverage/
 backup-src/
 yang/
 *.yang
+scratch/
+test-results/

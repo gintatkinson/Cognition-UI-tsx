@@ -1,6 +1,352 @@
-<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="15.304272000000001">
-<testsuite name="trans_client_ports.spec.ts" timestamp="2026-06-11T19:06:23.447Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.601" errors="0">
-<testcase name="Transport Client Service Port Mapping and Tunnels E2E › should verify access port mapping, compatibility validation blocks, tunnels editing, and BDD Scenario 8" classname="trans_client_ports.spec.ts" time="14.601">
+<testsuites id="" name="" tests="20" failures="0" skipped="0" errors="0" time="72.838439">
+<testsuite name="detail_telemetry.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="4" failures="0" skipped="0" time="41.11" errors="0">
+<testcase name="IP &amp; MAC Telemetry Details E2E › should display MAC address on physical port and IP address on logical TP" classname="detail_telemetry.spec.ts" time="14.16">
+</testcase>
+<testcase name="IP &amp; MAC Telemetry Details E2E › should resolve and display physical MAC address on logical router interfaces table" classname="detail_telemetry.spec.ts" time="11.454">
+</testcase>
+<testcase name="IP &amp; MAC Telemetry Details E2E › should display SFP transceiver status and MAC address based on link state on hardware details page" classname="detail_telemetry.spec.ts" time="8.838">
+</testcase>
+<testcase name="IP &amp; MAC Telemetry Details E2E › should display cabinet placement and navigate to chassis detail page across all views" classname="detail_telemetry.spec.ts" time="6.658">
+</testcase>
+</testsuite>
+<testsuite name="link_nrp.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.694" errors="0">
+<testcase name="OTN Network Resource Partition MPI Mapping E2E › should configure and save NRP profile on an OTN topology link, and reject on a non-OTN link" classname="link_nrp.spec.ts" time="14.694">
+</testcase>
+</testsuite>
+<testsuite name="links_expansion.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="4.266" errors="0">
+<testcase name="Links View Expansion &amp; Layout › should expand a link and display layered transport, endpoints horizontally, and services" classname="links_expansion.spec.ts" time="4.266">
+</testcase>
+</testsuite>
+<testsuite name="satellite.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="2.644" errors="0">
+<testcase name="Satellite Payload Schematic › should display ground gateway links and not show &quot;No Gateway Links&quot;" classname="satellite.spec.ts" time="2.644">
+</testcase>
+</testsuite>
+<testsuite name="search_test.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="3" failures="0" skipped="0" time="63.744" errors="0">
+<testcase name="verify R1-Core search and details page in GUI" classname="search_test.spec.ts" time="7.37">
+<system-out>
+<![CDATA[BROWSER LOG: Cognitive main.tsx is starting execution...
+BROWSER LOG: Found root element, mounting React...
+BROWSER LOG: Fetching topology from Firebase Local Emulator...
+BROWSER LOG: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+BROWSER LOG: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+BROWSER LOG: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+Saved screenshot of search results to: /Users/perkunas/.gemini/antigravity/brain/41cea6fa-646d-4c76-9807-bab12410bcb4/r1_core_search_results.png
+Saved screenshot of details page to: /Users/perkunas/.gemini/antigravity/brain/41cea6fa-646d-4c76-9807-bab12410bcb4/r1_core_details.png
+]]>
+</system-out>
+</testcase>
+<testcase name="verify R1-Core hardware containment tree in IETF Explorer view" classname="search_test.spec.ts" time="7.86">
+<system-out>
+<![CDATA[BROWSER LOG: Cognitive main.tsx is starting execution...
+BROWSER LOG: Found root element, mounting React...
+BROWSER LOG: Fetching topology from Firebase Local Emulator...
+BROWSER LOG: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+BROWSER LOG: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+BROWSER LOG: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+Saved screenshot of expanded tree to: /Users/perkunas/.gemini/antigravity/brain/41cea6fa-646d-4c76-9807-bab12410bcb4/r1_core_tree_expansion.png
+]]>
+</system-out>
+</testcase>
+<testcase name="verify no &quot;Part: ---&quot; placeholder exists in any device hardware containment tree in IETF Explorer view" classname="search_test.spec.ts" time="48.514">
+<system-out>
+<![CDATA[BROWSER LOG: Cognitive main.tsx is starting execution...
+BROWSER LOG: Found root element, mounting React...
+BROWSER LOG: Fetching topology from Firebase Local Emulator...
+BROWSER LOG: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+BROWSER LOG: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+BROWSER LOG: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="slice_pm.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="8.084" errors="0">
+<testcase name="OTN Network Slice Performance Monitoring E2E › should configure, validate, and monitor OTN slice performance objectives" classname="slice_pm.spec.ts" time="8.084">
+</testcase>
+</testsuite>
+<testsuite name="trans_client_ports.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.147" errors="0">
+<testcase name="Transport Client Service Port Mapping and Tunnels E2E › should verify access port mapping, compatibility validation blocks, tunnels editing, and BDD Scenario 8" classname="trans_client_ports.spec.ts" time="14.147">
+</testcase>
+</testsuite>
+<testsuite name="verify_dot1q_filtering.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="16.513" errors="0">
+<testcase name="IEEE 802.1Q Port Maps and Forwarding Filtering Policies E2E › should verify policies, FDB static entries, validation rules, persistence, and BDD Scenario 11" classname="verify_dot1q_filtering.spec.ts" time="16.513">
+<system-out>
+<![CDATA[[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...
+[BROWSER CONSOLE]: log: Found root element, mounting React...
+[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...
+[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-all","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-all","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-only-vlan-tagged","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-only-vlan-tagged","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]},{"address":"00:AA:BB:CC:DD:EE","vlan-id":20,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"discard"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig=undefined
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="verify_dot1q_priority.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="14.057" errors="0">
+<testcase name="IEEE 802.1Q Priority and Traffic Class Mapping E2E › should verify priority mapping tables, validation bounds, persistence, and BDD Scenario 10" classname="verify_dot1q_priority.spec.ts" time="14.057">
+</testcase>
+</testsuite>
+<testsuite name="verify_dot1q_statistics.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="13.569" errors="0">
+<testcase name="IEEE 802.1Q Bridge Port Performance and Error Statistics E2E › should verify seeded stats, simulate discards, reset stats, and run BDD Scenario 12" classname="verify_dot1q_statistics.spec.ts" time="13.569">
+<system-out>
+<![CDATA[[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...
+[BROWSER CONSOLE]: log: Found root element, mounting React...
+[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...
+[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-all","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-all","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-all","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={"ingress-filtering":true,"acceptable-frame-types":"admit-all","enable-filtering":true,"static-filtering-entries":[{"address":"00:1A:2B:3C:4D:5E","vlan-id":10,"port-map":[{"port-ref":"eth0","control-element":"forward"},{"port-ref":"eth1","control-element":"filter"}]}]}
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="verify_dot1q_vlan.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="15.587" errors="0">
+<testcase name="IEEE 802.1Q Bridge Port VLAN Tag and Type Definitions E2E › should verify VLAN tag types, validation engine rules, persistence, and BDD Scenario 9" classname="verify_dot1q_vlan.spec.ts" time="15.587">
+</testcase>
+</testsuite>
+<testsuite name="verify_l2_links.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="19.499" errors="0">
+<testcase name="IETF Layer 2 Link Attributes E2E › should verify L2 link attributes, validate edit inputs, detect duplex mismatch, and run BDD Scenario 14" classname="verify_l2_links.spec.ts" time="19.499">
+<system-out>
+<![CDATA[[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...
+[BROWSER CONSOLE]: log: Found root element, mounting React...
+[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...
+[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+]]>
+</system-out>
+<system-err>
+<![CDATA[(node:20502) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="verify_l2_ports.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="15.997" errors="0">
+<testcase name="IETF Layer 2 TP Encapsulation and Virtualization E2E › should verify L2 port attributes, validate edit inputs, check co-dependencies, and run BDD Scenario 15" classname="verify_l2_ports.spec.ts" time="15.997">
+<system-out>
+<![CDATA[[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...
+[BROWSER CONSOLE]: log: Found root element, mounting React...
+[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...
+[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+SELECTED NETWORK ID: Cognitive Controller
+
+V3.0.0-BETA
+
+Dashboard
+IETF Domains
+YANG Validator
+Inventory Location
+Network Inventory
+Passive Inventory
+Base Network Topology
+Internet Types (RFC 6021)
+Optical L0 (RFC 9093)
+Optical L1 (Draft-IETF)
+Inventory Topology
+Topology
+Devices
+Links
+Services
+Slices
+Settings
+Admin Context
+ACTIVE SCREEN
+Base Network Topology View
+BaseNetworkTopologyView.tsx
+Toggle theme
+
+admin@teraflowsdn.local
+
+SIGN OUT
+
+IETF-NETWORK (RFC 8345)
+Network Topology Base Model
+
+Multi-layer topology builder designed to map overlay relationships (Logical IP, L3 routing) down to physical infrastructure underlays.
+
+NETWORKS & NODES (FEAT 28)
+VERTICAL LAYER MAPPING (US 26)
+YANG SLICING
+BDD TEST SUITE (RFC 8345)
+Network Inventory
+L2 Carrier Ethernet Network
+ID: carrier-ethernet-L2
+L2-ETHERNET
+2 nodes
+0 underlays
+L3 IP Carrier Overlay Network
+ID: overlay-L3
+L3-IP-OVERLAY
+17 nodes
+1 underlays
+L0 Physical Optical Underlay
+ID: underlay-L0
+PHYSICAL
+17 nodes
+0 underlays
+OTN & fg-OTN Transport Network
+ID: underlay-OTN-L1
+L1-TRANSPORT
+17 nodes
+1 underlays
+Add Network Container
+NETWORK IDENTIFIER (URI) *
+DESCRIPTIVE TITLE
+NETWORK TYPE CLASS
+physical / L0 underlay
+L1-transport
+L2-ethernet
+L3-ip-overlay (URI-mapped)
+virtual / slicing overlay
+DESCRIPTION REFERENCE
+Create Network datastore
+L2 Carrier Ethernet Network
+
+ID: carrier-ethernet-L2 | Class: L2-ethernet
+
+ACTIVE RFC 8345 CONTAINER
+
+Layer 2 Carrier Ethernet Network conforming to ietf-l2-topology.
+
+Underlay Networks
+supporting-network
+Not supported by any underlay networks (Root Level).
+-- Choose underlay --
+L3 IP Carrier Overlay Network
+L0 Physical Optical Underlay
+OTN & fg-OTN Transport Network
+Map underlay
+Constituent Nodes
+node [list]
+Tokyo L2 Aggregation Switch
+Node Ref: node-L2-TK-switch
+Osaka L2 Edge Switch
+Node Ref: node-L2-OS-switch
+Add Constituent Node
+Node Linkages & Mappings: Tokyo L2 Aggregation Switch
+
+YANG node representation /supporting-node config
+
+node-id: node-L2-TK-switch
+ACTIVE UNDERLAY MAPPED NODES
+None. This node behaves as a root logical element. Add cross-tier dependencies below.
+ESTABLISH UNDERLAY MAPPING
+To create a cross-tier node layout, first define at least one "Underlay Network" relationship on the parent layout above.
+NODE TERMINATION POINTS
+YANG: TP-ID
+tp-L2-TK-eth0
+tp-L2-TK-eth1
+CONFIGURE TERMINATION POINT
+Termination Point ID (URI) *
+MAP TO PHYSICAL UNDERLAY TP (OPTIONAL)
+Underlay Network
+-- None --
+Underlay Node
+-- Select node --
+Underlay TP Reference
+-- Select TP --
+Map & Add Termination Point
+IETF Layer 2 Node Attributes
+Edit Attributes
+Management MAC:
+00:11:22:33:44:55
+Management VLAN:
+100
+Bridge ID:
+00:11:22:33:44:55
+Network Links Explorer (RFC 8345)
+
+Establish topological link elements mapping source elements to destination interfaces.
+
+TOPOLOGICAL LINKS
+LINK INVENTORY
+link-L2-TK-to-OS
+node-L2-TK-switch (tp-L2-TK-eth0)
+node-L2-OS-switch (tp-L2-OS-eth0)
+link-L2-OS-to-TK
+node-L2-OS-switch (tp-L2-OS-eth0)
+node-L2-TK-switch (tp-L2-TK-eth0)
+CONJOIN INTER-NODE INTERFACES
+Topological Link ID (URI) *
+Source Node *
+-- Choose --
+Tokyo L2 Aggregation Switch
+Osaka L2 Edge Switch
+Source TP *
+-- Choose --
+Destination Node *
+-- Choose --
+Tokyo L2 Aggregation Switch
+Osaka L2 Edge Switch
+Destination TP *
+-- Choose --
+MAP OVERLAY LINK TO UNDERLAY
+Underlay Network
+-- None --
+Underlay Link
+-- Choose link --
+Establish Interface Link
+© 2026 ETSI COGNITIVE CONTROLLER
+CONNECTED TO CONTROLLER NODE: COGNITIVE-CORE-01
+API LATENCY: 14MS
+UPTIME: 142D 04H 22M
+0ms
+[BROWSER CONSOLE]: log: handleSaveL2TpAttributes is called, encapsulation: vxlan outerTag: 100 innerTag: 
+[BROWSER CONSOLE]: log: handleSaveL2TpAttributes is called, encapsulation: qinq outerTag: 100 innerTag: 5000
+[BROWSER CONSOLE]: log: handleSaveL2TpAttributes is called, encapsulation: vlan outerTag: 200 innerTag: 5000
+]]>
+</system-out>
+<system-err>
+<![CDATA[(node:20530) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="verify_l2_topology.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="17.768" errors="0">
+<testcase name="IETF Layer 2 Network Topology and Node Attributes E2E › should verify L2 node attributes, validate edit inputs, and run BDD Scenario 13" classname="verify_l2_topology.spec.ts" time="17.768">
+<system-out>
+<![CDATA[[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...
+[BROWSER CONSOLE]: log: Found root element, mounting React...
+[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...
+[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2
+[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3
+[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.
+[BROWSER CONSOLE]: log: handleSaveL2NodeAttributes is called, VLAN: 200 MAC: 00:AA:BB:CC:DD:EE
+[BROWSER CONSOLE]: log: handleSaveL2NodeAttributes is called, VLAN: 5000 MAC: 00:AA:BB:CC:DD:EE
+[BROWSER CONSOLE]: log: handleSaveL2NodeAttributes is called, VLAN: 200 MAC: 00:AA:BB
+]]>
+</system-out>
+<system-err>
+<![CDATA[(node:20569) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+]]>
+</system-err>
+</testcase>
+</testsuite>
+<testsuite name="verify_services_list.spec.ts" timestamp="2026-06-12T17:40:05.331Z" hostname="chromium" tests="1" failures="0" skipped="0" time="5.168" errors="0">
+<testcase name="Verify services list and capture screenshot" classname="verify_services_list.spec.ts" time="5.168">
+<system-out>
+<![CDATA[
+=== SERVICES TABLE ROW VERIFICATION ===
+Total rows found: 3
+Row [0]: 	svc-1	 | L3VPN-Enterprise | 	L3VPN	ACTIVE	 | d1/eth0 | d3/p3 | 	Details
+Row [1]: 	svc-2	 | L2VPN-Backup | 	L2VPN	PENDING	 | d2/eth2 | d3/p1 | 	Details
+Row [2]: 	svc-trans-client-1	 | Ethernet-Over-OTN-Core | 	TRANSPORT-CLIENT	ACTIVE	 | node-L3-TK-router/tp-L3-TK-ge1 | node-L3-OS-router/tp-L3-OS-ge1 | 	Details
+========================================
+
+Saved proof screenshot to: /Users/perkunas/.gemini/antigravity/brain/459d4423-6d66-41ea-9802-61dbfd20cf72/services_table_proof.png
+]]>
+</system-out>
 </testcase>
 </testsuite>
 </testsuites>

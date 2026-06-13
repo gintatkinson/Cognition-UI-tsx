@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "projects": [
@@ -20,7 +20,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 4
         },
         "id": "chromium",
         "name": "chromium",
@@ -65,6 +65,539 @@
   },
   "suites": [
     {
+      "title": "detail_telemetry.spec.ts",
+      "file": "detail_telemetry.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IP & MAC Telemetry Details E2E",
+          "file": "detail_telemetry.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display MAC address on physical port and IP address on logical TP",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 14160,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:05.842Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1ce7d270e196bd04243c-dcf015fe6993dff7073e",
+              "file": "detail_telemetry.spec.ts",
+              "line": 4,
+              "column": 3
+            },
+            {
+              "title": "should resolve and display physical MAC address on logical router interfaces table",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 11454,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:05.841Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1ce7d270e196bd04243c-2d0ec9679301b0186d7d",
+              "file": "detail_telemetry.spec.ts",
+              "line": 132,
+              "column": 3
+            },
+            {
+              "title": "should display SFP transceiver status and MAC address based on link state on hardware details page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 8838,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:05.824Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1ce7d270e196bd04243c-6a307b6672f5e64ca294",
+              "file": "detail_telemetry.spec.ts",
+              "line": 200,
+              "column": 3
+            },
+            {
+              "title": "should display cabinet placement and navigate to chassis detail page across all views",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 6658,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:05.862Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1ce7d270e196bd04243c-04b748227ac64964084a",
+              "file": "detail_telemetry.spec.ts",
+              "line": 263,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "link_nrp.spec.ts",
+      "file": "link_nrp.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "OTN Network Resource Partition MPI Mapping E2E",
+          "file": "link_nrp.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should configure and save NRP profile on an OTN topology link, and reject on a non-OTN link",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 14694,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:12.737Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "50449f00db4e97101407-54df829b45ff1b8559d3",
+              "file": "link_nrp.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "links_expansion.spec.ts",
+      "file": "links_expansion.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Links View Expansion & Layout",
+          "file": "links_expansion.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should expand a link and display layered transport, endpoints horizontally, and services",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 4266,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:14.913Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2c8c386e2e1cea6270ae-c6592906ccbb3c5bcd60",
+              "file": "links_expansion.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "satellite.spec.ts",
+      "file": "satellite.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Satellite Payload Schematic",
+          "file": "satellite.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display ground gateway links and not show \"No Gateway Links\"",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2644,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:17.531Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a0893372d3ae3b411ceb-0e7e0d9e78eb884102ee",
+              "file": "satellite.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "search_test.spec.ts",
+      "file": "search_test.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "verify R1-Core search and details page in GUI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 7370,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "BROWSER LOG: Cognitive main.tsx is starting execution...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Found root element, mounting React...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Fetching topology from Firebase Local Emulator...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                    },
+                    {
+                      "text": "Saved screenshot of search results to: /Users/perkunas/.gemini/antigravity/brain/41cea6fa-646d-4c76-9807-bab12410bcb4/r1_core_search_results.png\n"
+                    },
+                    {
+                      "text": "Saved screenshot of details page to: /Users/perkunas/.gemini/antigravity/brain/41cea6fa-646d-4c76-9807-bab12410bcb4/r1_core_details.png\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-12T17:40:19.213Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6ffcb55c83a8d8a6b032-7743413df227c6460098",
+          "file": "search_test.spec.ts",
+          "line": 50,
+          "column": 1
+        },
+        {
+          "title": "verify R1-Core hardware containment tree in IETF Explorer view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7860,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "BROWSER LOG: Cognitive main.tsx is starting execution...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Found root element, mounting React...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Fetching topology from Firebase Local Emulator...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                    },
+                    {
+                      "text": "Saved screenshot of expanded tree to: /Users/perkunas/.gemini/antigravity/brain/41cea6fa-646d-4c76-9807-bab12410bcb4/r1_core_tree_expansion.png\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-12T17:40:20.201Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6ffcb55c83a8d8a6b032-c742b7ed6e4c40e88396",
+          "file": "search_test.spec.ts",
+          "line": 99,
+          "column": 1
+        },
+        {
+          "title": "verify no \"Part: ---\" placeholder exists in any device hardware containment tree in IETF Explorer view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 48514,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "BROWSER LOG: Cognitive main.tsx is starting execution...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Found root element, mounting React...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Fetching topology from Firebase Local Emulator...\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                    },
+                    {
+                      "text": "BROWSER LOG: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-12T17:40:20.236Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "6ffcb55c83a8d8a6b032-66f9355f18e09828dade",
+          "file": "search_test.spec.ts",
+          "line": 158,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "slice_pm.spec.ts",
+      "file": "slice_pm.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "OTN Network Slice Performance Monitoring E2E",
+          "file": "slice_pm.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should configure, validate, and monitor OTN slice performance objectives",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 8084,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:26.607Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "b88c928b64dba19c4a2d-825cc50315044addb078",
+              "file": "slice_pm.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "trans_client_ports.spec.ts",
       "file": "trans_client_ports.spec.ts",
       "column": 0,
@@ -90,15 +623,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 14601,
+                      "duration": 14147,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-11T19:06:23.811Z",
+                      "startTime": "2026-06-12T17:40:27.468Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -114,13 +647,589 @@
           ]
         }
       ]
+    },
+    {
+      "title": "verify_dot1q_filtering.spec.ts",
+      "file": "verify_dot1q_filtering.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IEEE 802.1Q Port Maps and Forwarding Filtering Policies E2E",
+          "file": "verify_dot1q_filtering.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify policies, FDB static entries, validation rules, persistence, and BDD Scenario 11",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 16513,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Found root element, mounting React...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-all\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-all\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-only-vlan-tagged\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-only-vlan-tagged\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]},{\"address\":\"00:AA:BB:CC:DD:EE\",\"vlan-id\":20,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"discard\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig=undefined\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:28.090Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "117c167c03a2b49b2d3e-0c8c18a3c9b8ccf1d869",
+              "file": "verify_dot1q_filtering.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_dot1q_priority.spec.ts",
+      "file": "verify_dot1q_priority.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IEEE 802.1Q Priority and Traffic Class Mapping E2E",
+          "file": "verify_dot1q_priority.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify priority mapping tables, validation bounds, persistence, and BDD Scenario 10",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 14057,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:34.717Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "314eda597e436543d133-f24bc2823b99b1ba3f74",
+              "file": "verify_dot1q_priority.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_dot1q_statistics.spec.ts",
+      "file": "verify_dot1q_statistics.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IEEE 802.1Q Bridge Port Performance and Error Statistics E2E",
+          "file": "verify_dot1q_statistics.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify seeded stats, simulate discards, reset stats, and run BDD Scenario 12",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 13569,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Found root element, mounting React...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-all\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-all\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-all\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Dot1qForwardingFilteringCard sync state: portKey=d1/eth0, initialConfig={\"ingress-filtering\":true,\"acceptable-frame-types\":\"admit-all\",\"enable-filtering\":true,\"static-filtering-entries\":[{\"address\":\"00:1A:2B:3C:4D:5E\",\"vlan-id\":10,\"port-map\":[{\"port-ref\":\"eth0\",\"control-element\":\"forward\"},{\"port-ref\":\"eth1\",\"control-element\":\"filter\"}]}]}\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:41.640Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "4ad0017a5d30e1ad7280-75a24e886ddb62a5c383",
+              "file": "verify_dot1q_statistics.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_dot1q_vlan.spec.ts",
+      "file": "verify_dot1q_vlan.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IEEE 802.1Q Bridge Port VLAN Tag and Type Definitions E2E",
+          "file": "verify_dot1q_vlan.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify VLAN tag types, validation engine rules, persistence, and BDD Scenario 9",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 15587,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:44.634Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "bbf70cf359addc2e9f76-1f1da5c4a5704c090565",
+              "file": "verify_dot1q_vlan.spec.ts",
+              "line": 4,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_l2_links.spec.ts",
+      "file": "verify_l2_links.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IETF Layer 2 Link Attributes E2E",
+          "file": "verify_l2_links.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify L2 link attributes, validate edit inputs, detect duplex mismatch, and run BDD Scenario 14",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 19499,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Found root element, mounting React...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "buffer": "KG5vZGU6MjA1MDIpIFtERVAwMjA1XSBEZXByZWNhdGlvbldhcm5pbmc6IGBtb2R1bGUucmVnaXN0ZXIoKWAgaXMgZGVwcmVjYXRlZC4gVXNlIGBtb2R1bGUucmVnaXN0ZXJIb29rcygpYCBpbnN0ZWFkLgooVXNlIGBub2RlIC0tdHJhY2UtZGVwcmVjYXRpb24gLi4uYCB0byBzaG93IHdoZXJlIHRoZSB3YXJuaW5nIHdhcyBjcmVhdGVkKQo="
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:48.797Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "6134fccca370f0e0b4be-56f9833a0affcaf91063",
+              "file": "verify_l2_links.spec.ts",
+              "line": 10,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_l2_ports.spec.ts",
+      "file": "verify_l2_ports.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IETF Layer 2 TP Encapsulation and Virtualization E2E",
+          "file": "verify_l2_ports.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify L2 port attributes, validate edit inputs, check co-dependencies, and run BDD Scenario 15",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 15997,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Found root element, mounting React...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                        },
+                        {
+                          "text": "SELECTED NETWORK ID: Cognitive Controller\n\nV3.0.0-BETA\n\nDashboard\nIETF Domains\nYANG Validator\nInventory Location\nNetwork Inventory\nPassive Inventory\nBase Network Topology\nInternet Types (RFC 6021)\nOptical L0 (RFC 9093)\nOptical L1 (Draft-IETF)\nInventory Topology\nTopology\nDevices\nLinks\nServices\nSlices\nSettings\nAdmin Context\nACTIVE SCREEN\nBase Network Topology View\nBaseNetworkTopologyView.tsx\nToggle theme\n\nadmin@teraflowsdn.local\n\nSIGN OUT\n\nIETF-NETWORK (RFC 8345)\nNetwork Topology Base Model\n\nMulti-layer topology builder designed to map overlay relationships (Logical IP, L3 routing) down to physical infrastructure underlays.\n\nNETWORKS & NODES (FEAT 28)\nVERTICAL LAYER MAPPING (US 26)\nYANG SLICING\nBDD TEST SUITE (RFC 8345)\nNetwork Inventory\nL2 Carrier Ethernet Network\nID: carrier-ethernet-L2\nL2-ETHERNET\n2 nodes\n0 underlays\nL3 IP Carrier Overlay Network\nID: overlay-L3\nL3-IP-OVERLAY\n17 nodes\n1 underlays\nL0 Physical Optical Underlay\nID: underlay-L0\nPHYSICAL\n17 nodes\n0 underlays\nOTN & fg-OTN Transport Network\nID: underlay-OTN-L1\nL1-TRANSPORT\n17 nodes\n1 underlays\nAdd Network Container\nNETWORK IDENTIFIER (URI) *\nDESCRIPTIVE TITLE\nNETWORK TYPE CLASS\nphysical / L0 underlay\nL1-transport\nL2-ethernet\nL3-ip-overlay (URI-mapped)\nvirtual / slicing overlay\nDESCRIPTION REFERENCE\nCreate Network datastore\nL2 Carrier Ethernet Network\n\nID: carrier-ethernet-L2 | Class: L2-ethernet\n\nACTIVE RFC 8345 CONTAINER\n\nLayer 2 Carrier Ethernet Network conforming to ietf-l2-topology.\n\nUnderlay Networks\nsupporting-network\nNot supported by any underlay networks (Root Level).\n-- Choose underlay --\nL3 IP Carrier Overlay Network\nL0 Physical Optical Underlay\nOTN & fg-OTN Transport Network\nMap underlay\nConstituent Nodes\nnode [list]\nTokyo L2 Aggregation Switch\nNode Ref: node-L2-TK-switch\nOsaka L2 Edge Switch\nNode Ref: node-L2-OS-switch\nAdd Constituent Node\nNode Linkages & Mappings: Tokyo L2 Aggregation Switch\n\nYANG node representation /supporting-node config\n\nnode-id: node-L2-TK-switch\nACTIVE UNDERLAY MAPPED NODES\nNone. This node behaves as a root logical element. Add cross-tier dependencies below.\nESTABLISH UNDERLAY MAPPING\nTo create a cross-tier node layout, first define at least one \"Underlay Network\" relationship on the parent layout above.\nNODE TERMINATION POINTS\nYANG: TP-ID\ntp-L2-TK-eth0\ntp-L2-TK-eth1\nCONFIGURE TERMINATION POINT\nTermination Point ID (URI) *\nMAP TO PHYSICAL UNDERLAY TP (OPTIONAL)\nUnderlay Network\n-- None --\nUnderlay Node\n-- Select node --\nUnderlay TP Reference\n-- Select TP --\nMap & Add Termination Point\nIETF Layer 2 Node Attributes\nEdit Attributes\nManagement MAC:\n00:11:22:33:44:55\nManagement VLAN:\n100\nBridge ID:\n00:11:22:33:44:55\nNetwork Links Explorer (RFC 8345)\n\nEstablish topological link elements mapping source elements to destination interfaces.\n\nTOPOLOGICAL LINKS\nLINK INVENTORY\nlink-L2-TK-to-OS\nnode-L2-TK-switch (tp-L2-TK-eth0)\nnode-L2-OS-switch (tp-L2-OS-eth0)\nlink-L2-OS-to-TK\nnode-L2-OS-switch (tp-L2-OS-eth0)\nnode-L2-TK-switch (tp-L2-TK-eth0)\nCONJOIN INTER-NODE INTERFACES\nTopological Link ID (URI) *\nSource Node *\n-- Choose --\nTokyo L2 Aggregation Switch\nOsaka L2 Edge Switch\nSource TP *\n-- Choose --\nDestination Node *\n-- Choose --\nTokyo L2 Aggregation Switch\nOsaka L2 Edge Switch\nDestination TP *\n-- Choose --\nMAP OVERLAY LINK TO UNDERLAY\nUnderlay Network\n-- None --\nUnderlay Link\n-- Choose link --\nEstablish Interface Link\n© 2026 ETSI COGNITIVE CONTROLLER\nCONNECTED TO CONTROLLER NODE: COGNITIVE-CORE-01\nAPI LATENCY: 14MS\nUPTIME: 142D 04H 22M\n0ms\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: handleSaveL2TpAttributes is called, encapsulation: vxlan outerTag: 100 innerTag: \n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: handleSaveL2TpAttributes is called, encapsulation: qinq outerTag: 100 innerTag: 5000\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: handleSaveL2TpAttributes is called, encapsulation: vlan outerTag: 200 innerTag: 5000\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "buffer": "KG5vZGU6MjA1MzApIFtERVAwMjA1XSBEZXByZWNhdGlvbldhcm5pbmc6IGBtb2R1bGUucmVnaXN0ZXIoKWAgaXMgZGVwcmVjYXRlZC4gVXNlIGBtb2R1bGUucmVnaXN0ZXJIb29rcygpYCBpbnN0ZWFkLgooVXNlIGBub2RlIC0tdHJhY2UtZGVwcmVjYXRpb24gLi4uYCB0byBzaG93IHdoZXJlIHRoZSB3YXJuaW5nIHdhcyBjcmVhdGVkKQo="
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:40:55.245Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "06a73d3fbc1acf7548f1-092f55d79c13e1ee6058",
+              "file": "verify_l2_ports.spec.ts",
+              "line": 10,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_l2_topology.spec.ts",
+      "file": "verify_l2_topology.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "IETF Layer 2 Network Topology and Node Attributes E2E",
+          "file": "verify_l2_topology.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should verify L2 node attributes, validate edit inputs, and run BDD Scenario 13",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 17768,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Cognitive main.tsx is starting execution...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Found root element, mounting React...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Fetching topology from Firebase Local Emulator...\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: dbNodes UUIDs: CU-node-CC1, CU-node-DC12, CU-node-EQ_OS1, CU-node-FK_TJ, CU-node-FUJI_SUMMIT, CU-node-KOZU, CU-node-M_CLS, CU-node-NG_SM, CU-node-OK_NH, CU-node-OS1, CU-node-OS3, CU-node-SD_CH, CU-node-SP_OD, CU-node-TH_OTE, CU-node-TK1, CU-node-TY1, CU-node-TYO2, Microwave-node-EQ_OS1, Microwave-node-FUJI_SUMMIT, Microwave-node-M_CLS, Microwave-node-NG_SM, Microwave-node-OK_NH, Microwave-node-OS3, Microwave-node-SP_OD, Microwave-node-TH_OTE, Microwave-node-TK1, Microwave-node-TY1, Tightbeam-node-CC1, Tightbeam-node-DC12, Tightbeam-node-FK_TJ, Tightbeam-node-KOZU, Tightbeam-node-OS1, Tightbeam-node-SD_CH, Tightbeam-node-TYO2, node-CC1, node-DC12, node-EQ_OS1, node-FK_TJ, node-FUJI_SUMMIT, node-KOZU, node-M_CLS, node-NG_SM, node-OK_NH, node-OS1, node-OS3, node-SAT1, node-SAT2, node-SAT3, node-SAT4, node-SD_CH, node-SP_OD, node-TH_OTE, node-TK1, node-TY1, node-TYO2\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: mappedMockNodes UUIDs: d1, d2, d3, d4, q1, q2, q3\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: Loaded 62 nodes, 79 links, 3 passive devices, 5 passive cables, 4 RFC8345 networks, and 3 slices from Firestore.\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: handleSaveL2NodeAttributes is called, VLAN: 200 MAC: 00:AA:BB:CC:DD:EE\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: handleSaveL2NodeAttributes is called, VLAN: 5000 MAC: 00:AA:BB:CC:DD:EE\n"
+                        },
+                        {
+                          "text": "[BROWSER CONSOLE]: log: handleSaveL2NodeAttributes is called, VLAN: 200 MAC: 00:AA:BB\n"
+                        }
+                      ],
+                      "stderr": [
+                        {
+                          "buffer": "KG5vZGU6MjA1NjkpIFtERVAwMjA1XSBEZXByZWNhdGlvbldhcm5pbmc6IGBtb2R1bGUucmVnaXN0ZXIoKWAgaXMgZGVwcmVjYXRlZC4gVXNlIGBtb2R1bGUucmVnaXN0ZXJIb29rcygpYCBpbnN0ZWFkLgooVXNlIGBub2RlIC0tdHJhY2UtZGVwcmVjYXRpb24gLi4uYCB0byBzaG93IHdoZXJlIHRoZSB3YXJuaW5nIHdhcyBjcmVhdGVkKQo="
+                        }
+                      ],
+                      "retry": 0,
+                      "startTime": "2026-06-12T17:41:00.253Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "05a48e529cd3351a67bd-59975da3252be121a85b",
+              "file": "verify_l2_topology.spec.ts",
+              "line": 10,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "verify_services_list.spec.ts",
+      "file": "verify_services_list.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Verify services list and capture screenshot",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 5168,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "\n=== SERVICES TABLE ROW VERIFICATION ===\n"
+                    },
+                    {
+                      "text": "Total rows found: 3\n"
+                    },
+                    {
+                      "text": "Row [0]: \tsvc-1\t | L3VPN-Enterprise | \tL3VPN\tACTIVE\t | d1/eth0 | d3/p3 | \tDetails\n"
+                    },
+                    {
+                      "text": "Row [1]: \tsvc-2\t | L2VPN-Backup | \tL2VPN\tPENDING\t | d2/eth2 | d3/p1 | \tDetails\n"
+                    },
+                    {
+                      "text": "Row [2]: \tsvc-trans-client-1\t | Ethernet-Over-OTN-Core | \tTRANSPORT-CLIENT\tACTIVE\t | node-L3-TK-router/tp-L3-TK-ge1 | node-L3-OS-router/tp-L3-OS-ge1 | \tDetails\n"
+                    },
+                    {
+                      "text": "========================================\n\n"
+                    },
+                    {
+                      "text": "Saved proof screenshot to: /Users/perkunas/.gemini/antigravity/brain/459d4423-6d66-41ea-9802-61dbfd20cf72/services_table_proof.png\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-12T17:41:08.328Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c16677ae9741c42ed44f-a1a5bfe5bcf473093ef8",
+          "file": "verify_services_list.spec.ts",
+          "line": 4,
+          "column": 1
+        }
+      ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-06-11T19:06:23.430Z",
-    "duration": 15304.272,
-    "expected": 1,
+    "startTime": "2026-06-12T17:40:05.244Z",
+    "duration": 72838.439,
+    "expected": 20,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
